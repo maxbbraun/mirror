@@ -6,6 +6,8 @@ This is the source code for the prototype UI of my smart mirror project outlined
 
 Simply import the whole project into [Android Studio](http://developer.android.com/tools/studio/index.html), then build and run the apk.
 
+Note that in order to get the weather to show up you need to obtain an API key for the [Forecast API](https://developer.forecast.io) and add it to [`Weather.java`](https://github.com/maxbbraun/mirror/blob/master/app/src/main/java/net/maxbraun/mirror/Weather.java#L26).    
+
 ##License
 
 Copyright 2016 Max Braun
