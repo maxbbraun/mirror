@@ -34,9 +34,6 @@ public class News extends DataUpdater<List<String>> {
    */
   private final XmlPullParser parser;
 
-  /**
-   *
-   */
   public News(UpdateListener<List<String>> updateListener) {
     super(updateListener, UPDATE_INTERVAL_MILLIS);
 
