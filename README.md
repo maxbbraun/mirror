@@ -1,4 +1,4 @@
-# Smart Mirror UI
+# Smart Mirror
 
 This is the source code for the prototype UI of my smart mirror project outlined in [this article](https://medium.com/@maxbraun/my-bathroom-mirror-is-smarter-than-yours-94b21c6671ba#.4exmyxt0w).
 
