@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+  <style name="AppTheme" parent="@style/Theme.Leanback">
+    <item name="android:background">#ff000000</item>
+  </style>
+
+  <style name="BaseTextStyle">
+    <item name="android:textColor">#ffffffff</item>
+  </style>
+
+  <style name="TemperatureStyle" parent="BaseTextStyle">
+    <item name="android:textSize">100dp</item>
+    <item name="android:fontFamily">sans-serif-thin</item>
+  </style>
+
+  <style name="WeatherTextStyle" parent="BaseTextStyle">
+    <item name="android:textSize">30dp</item>
+    <item name="android:fontFamily">sans-serif-light</item>
+    <item name="android:ellipsize">none</item>
+    <item name="android:maxLines">3</item>
+  </style>
+
+  <style name="TimeStyle" parent="BaseTextStyle">
+    <item name="android:textSize">100dp</item>
+    <item name="android:fontFamily">sans-serif-thin</item>
+  </style>
+
+  <style name="DateStyle" parent="BaseTextStyle">
+    <item name="android:textSize">30dp</item>
+    <item name="android:fontFamily">sans-serif-light</item>
+  </style>
+
+  <style name="NewsStyle" parent="BaseTextStyle">
+    <item name="android:textSize">20dp</item>
+    <item name="android:fontFamily">sans-serif-light</item>
+    <item name="android:ellipsize">end</item>
+    <item name="android:singleLine">true</item>
+  </style>
+</resources>

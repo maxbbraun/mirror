@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:keepScreenOn="true"
+    android:paddingLeft="@dimen/outside_padding"
+    android:paddingRight="@dimen/outside_padding">
+
+  <!-- Weather -->
+  <TextView
+      android:id="@+id/temperature"
+      style="@style/TemperatureStyle"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_alignParentLeft="true"
+      android:layout_alignParentTop="true"
+      android:gravity="left"
+      tools:text="72°"/>
+
+  <ImageView
+      android:id="@+id/icon"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_alignBottom="@id/temperature"
+      android:layout_marginBottom="15dp"
+      android:layout_toRightOf="@id/temperature"
+      tools:src="@drawable/partly_cloudy_day"/>
+
+  <TextView
+      android:id="@+id/weather_summary"
+      style="@style/WeatherTextStyle"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_alignParentLeft="true"
+      android:layout_below="@id/temperature"
+      android:gravity="left"
+      android:maxWidth="380dp"
+      tools:text="Mostly cloudy until tomorrow evening"/>
+
+  <TextView
+      android:id="@+id/precipitation"
+      style="@style/WeatherTextStyle"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_alignParentLeft="true"
+      android:layout_below="@id/weather_summary"
+      android:layout_marginTop="@dimen/inter_group_margin"
+      android:drawableLeft="@drawable/umbrella"
+      android:drawablePadding="@dimen/icon_margin"
+      tools:text="6%"/>
+
+  <!-- Time and date -->
+  <TextClock
+      android:id="@+id/time"
+      style="@style/TimeStyle"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_alignParentRight="true"
+      android:layout_alignParentTop="true"
+      android:format12Hour="h\uee01mm"
+      android:gravity="right"/>
+
+  <TextClock
+      android:id="@+id/day_of_the_week"
+      style="@style/DateStyle"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_alignParentRight="true"
+      android:layout_below="@id/time"
+      android:format12Hour="EEEE\nMMMM d"
+      android:gravity="right"/>
+
+  <!-- News -->
+  <TextView
+      android:id="@+id/news_4"
+      style="@style/NewsStyle"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_alignParentBottom="true"
+      android:layout_alignParentLeft="true"
+      android:layout_marginBottom="@dimen/inter_group_margin"
+      android:drawableLeft="@drawable/news_ap"
+      android:drawablePadding="@dimen/icon_margin"
+      android:gravity="left"
+      tools:text="Obama, Sanders at the White House: Nice chat but that's all"/>
+
+  <TextView
+      android:id="@+id/news_3"
+      style="@style/NewsStyle"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_above="@id/news_4"
+      android:layout_alignParentLeft="true"
+      android:layout_marginBottom="@dimen/intra_group_margin"
+      android:drawableLeft="@drawable/news_ap"
+      android:drawablePadding="@dimen/icon_margin"
+      android:gravity="left"
+      tools:text="Debate feud injects fresh chaos into GOP primary"/>
+
+  <TextView
+      android:id="@+id/news_2"
+      style="@style/NewsStyle"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_above="@id/news_3"
+      android:layout_alignParentLeft="true"
+      android:layout_marginBottom="@dimen/intra_group_margin"
+      android:drawableLeft="@drawable/news_ap"
+      android:drawablePadding="@dimen/icon_margin"
+      android:gravity="left"
+      tools:text="Rancher killed in standoff vowed to die before going to jail"/>
+
+  <TextView
+      android:id="@+id/news_1"
+      style="@style/NewsStyle"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_above="@id/news_2"
+      android:layout_alignParentLeft="true"
+      android:layout_marginBottom="@dimen/intra_group_margin"
+      android:drawableLeft="@drawable/news_ap"
+      android:drawablePadding="@dimen/icon_margin"
+      android:gravity="left"
+      tools:text="Authorities: Last activists should leave wildlife preserve"/>
+</RelativeLayout>

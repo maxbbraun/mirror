@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+  <string name="app_name">Mirror</string>
+  <string name="home_name">Mirror Home</string>
+  <string name="unknown_ip_address">Unknown IP Address</string>
+</resources>
