@@ -15,7 +15,7 @@ public abstract class GeoLocation {
   /**
    * The URL of the geo location API endpoint.
    */
-  private static final String GEO_IP_URL = "http://freegeoip.net/json/";
+  private static final String GEO_IP_URL = "http://ip-api.com/json";
 
   /**
    * Makes a request to the geo location API and returns the current location or {@code null} on
@@ -31,8 +31,8 @@ public abstract class GeoLocation {
     // Parse the latitude and longitude from the response JSON.
     try {
       JSONObject responseJson = new JSONObject(response);
-      double latitude = responseJson.getDouble("latitude");
-      double longitude = responseJson.getDouble("longitude");
+      double latitude = responseJson.getDouble("lat");
+      double longitude = responseJson.getDouble("lon");
       Location location = new Location("");
       location.setLatitude(latitude);
       location.setLongitude(longitude);
