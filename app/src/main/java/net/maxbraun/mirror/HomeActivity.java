@@ -117,6 +117,8 @@ public class HomeActivity extends Activity {
       newsViews[i] = (TextView) findViewById(NEWS_VIEW_IDS[i]);
     }
 
+    hideNavigationBar();
+
     weather = new Weather(weatherUpdateListener);
     news = new News(newsUpdateListener);
   }
@@ -148,6 +150,13 @@ public class HomeActivity extends Activity {
       default:
         return false;
     }
+  }
+
+  /**
+   * Ensures that the navigation bar is hidden.
+   */
+  private void hideNavigationBar() {
+    temperatureView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
   }
 
   /**
