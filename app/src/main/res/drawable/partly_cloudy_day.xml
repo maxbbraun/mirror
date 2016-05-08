@@ -1,8 +1,8 @@
 <!-- (CC BY-SA 4.0) Max Braun https://goo.gl/GwN3xB -->
 
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
-    android:width="96dp"
-    android:height="96dp"
+    android:width="72dp"
+    android:height="72dp"
     android:viewportHeight="72.0"
     android:viewportWidth="72.0">
   <path

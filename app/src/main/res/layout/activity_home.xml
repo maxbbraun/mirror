@@ -22,8 +22,9 @@
 
   <ImageView
       android:id="@+id/icon"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
+      android:layout_width="96dp"
+      android:layout_height="96dp"
+      android:scaleType="fitXY"
       android:layout_alignBottom="@id/temperature"
       android:layout_marginBottom="15dp"
       android:layout_marginLeft="5dp"
