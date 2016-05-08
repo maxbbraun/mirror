@@ -16,6 +16,11 @@
     <item name="android:fontFamily">sans-serif-thin</item>
   </style>
 
+  <style name="TemperatureStyleCompact" parent="TemperatureStyle">
+    <item name="android:textSize">200dp</item>
+    <item name="android:fontFamily">sans-serif-thin</item>
+  </style>
+
   <style name="WeatherTextStyle" parent="BaseTextStyle">
     <item name="android:textSize">30dp</item>
     <item name="android:fontFamily">sans-serif-light</item>
