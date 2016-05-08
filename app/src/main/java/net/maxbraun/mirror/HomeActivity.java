@@ -117,8 +117,6 @@ public class HomeActivity extends Activity {
       newsViews[i] = (TextView) findViewById(NEWS_VIEW_IDS[i]);
     }
 
-    hideNavigationBar();
-
     weather = new Weather(weatherUpdateListener);
     news = new News(newsUpdateListener);
   }
@@ -135,6 +133,12 @@ public class HomeActivity extends Activity {
     weather.stop();
     news.stop();
     super.onStop();
+  }
+
+  @Override
+  protected void onResume() {
+    super.onResume();
+    hideNavigationBar();
   }
 
   @Override
