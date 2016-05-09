@@ -50,7 +50,7 @@ public class News extends DataUpdater<List<String>> {
 
     // Get the latest headlines from the AP news feed.
     String response = Network.get(AP_TOP_HEADLINES_URL);
-    if (response == null) {
+    if (response == null || response.isEmpty()) {
       Log.w(TAG, "Empty response.");
       return null;
     }
