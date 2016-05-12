@@ -144,8 +144,8 @@ public class Weather extends DataUpdater<WeatherData> {
    */
   private static String getRequestUrl(Location location) {
     if (location != null) {
-      return String.format(Locale.ENGLISH, "https://api.forecast.io/forecast/%s/%f,%f?units=auto", FORECAST_IO_API_KEY,
-                           location.getLatitude(), location.getLongitude());
+      return String.format(Locale.ENGLISH, "https://api.forecast.io/forecast/%s/%f,%f?units=auto&lang=%s", FORECAST_IO_API_KEY,
+                           location.getLatitude(), location.getLongitude(), Locale.getDefault().getLanguage());
     } else {
       return null;
     }
