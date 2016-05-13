@@ -1,17 +1,11 @@
 package net.maxbraun.mirror;
 
 import android.app.Activity;
-import android.content.Intent;
-import android.net.wifi.WifiInfo;
-import android.net.wifi.WifiManager;
 import android.os.Bundle;
-import android.provider.Settings;
-import android.text.format.Formatter;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.List;
 
@@ -48,7 +42,7 @@ public class HomeActivity extends Activity {
         temperatureView.setText(temperature);
 
         // Populate the 24-hour forecast summary, but strip any period at the end.
-        String summary = stripPeriod(data.daySummary);
+        String summary = util.stripPeriod(data.daySummary);
         weatherSummaryView.setText(summary);
 
         // Populate the precipitation probability as a percentage rounded to a whole number.
@@ -103,6 +97,7 @@ public class HomeActivity extends Activity {
 
   private Weather weather;
   private News news;
+  private Util util;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -119,6 +114,7 @@ public class HomeActivity extends Activity {
 
     weather = new Weather(weatherUpdateListener);
     news = new News(newsUpdateListener);
+    util = new Util(this);
   }
 
   @Override
@@ -138,68 +134,11 @@ public class HomeActivity extends Activity {
   @Override
   protected void onResume() {
     super.onResume();
-    hideNavigationBar();
+    util.hideNavigationBar(temperatureView);
   }
 
   @Override
   public boolean onKeyUp(int keyCode, KeyEvent event) {
-    // Use some standard button presses for easy debugging.
-    switch (keyCode) {
-      case KeyEvent.KEYCODE_DPAD_CENTER:
-        launchSettings();
-        return true;
-      case KeyEvent.KEYCODE_DPAD_UP:
-        showIpAddress();
-        return true;
-      default:
-        return false;
-    }
-  }
-
-  /**
-   * Ensures that the navigation bar is hidden.
-   */
-  private void hideNavigationBar() {
-    temperatureView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
-  }
-
-  /**
-   * Launches the system's default settings activity.
-   */
-  private void launchSettings() {
-    Intent settingsIntent = new Intent(Settings.ACTION_SETTINGS);
-    startActivity(settingsIntent);
-  }
-
-  /**
-   * Shows a {@link Toast} with the IPv4 address of the Wifi connection. Useful for debugging,
-   * especially when using adb over Wifi.
-   */
-  @SuppressWarnings("deprecation")
-  private void showIpAddress() {
-    WifiManager wifiManager = (WifiManager) getSystemService(WIFI_SERVICE);
-    WifiInfo wifiInfo = wifiManager.getConnectionInfo();
-    String ipAddress = null;
-    if (wifiInfo != null) {
-      ipAddress = Formatter.formatIpAddress(wifiInfo.getIpAddress());
-    }
-    if (ipAddress == null) {
-      ipAddress = getString(R.string.unknown_ip_address);
-    }
-    Toast.makeText(this, ipAddress, Toast.LENGTH_LONG).show();
-  }
-
-  /**
-   * Removes the period from the end of a sentence, if there is one.
-   */
-  private String stripPeriod(String sentence) {
-    if (sentence == null) {
-      return null;
-    }
-    if ((sentence.length() > 0) && (sentence.charAt(sentence.length() - 1) == '.')) {
-      return sentence.substring(0, sentence.length() - 1);
-    } else {
-      return sentence;
-    }
+    return util.onKeyUp(keyCode, event);
   }
 }

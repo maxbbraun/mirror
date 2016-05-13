@@ -2,6 +2,7 @@ package net.maxbraun.mirror;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -46,6 +47,7 @@ public class CompactHomeActivity extends Activity {
   private ImageView iconView;
 
   private Weather weather;
+  private Util util;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +58,7 @@ public class CompactHomeActivity extends Activity {
     iconView = (ImageView) findViewById(R.id.icon);
 
     weather = new Weather(weatherUpdateListener);
+    util = new Util(this);
   }
 
   @Override
@@ -73,13 +76,11 @@ public class CompactHomeActivity extends Activity {
   @Override
   protected void onResume() {
     super.onResume();
-    hideNavigationBar();
+    util.hideNavigationBar(temperatureView);
   }
 
-  /**
-   * Ensures that the navigation bar is hidden.
-   */
-  private void hideNavigationBar() {
-    temperatureView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
+  @Override
+  public boolean onKeyUp(int keyCode, KeyEvent event) {
+    return util.onKeyUp(keyCode, event);
   }
 }
