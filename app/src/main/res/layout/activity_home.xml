@@ -88,7 +88,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="left"
-        android:layout_marginBottom="@dimen/inter_group_margin"
+        android:layout_marginBottom="@dimen/intra_group_margin"
         android:drawableLeft="@drawable/news_ap"
         android:drawablePadding="@dimen/icon_margin"
         tools:text="Obama, Sanders at the White House: Nice chat but that's all"/>
