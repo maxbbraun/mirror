@@ -8,6 +8,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -23,7 +24,7 @@ public class Weather extends DataUpdater<WeatherData> {
   /**
    * The key used for the Forecast API.
    */
-  private static final String FORECAST_IO_API_KEY = "58b42a8aa74df3e828442a4fb79f5dba";
+  private static final String FORECAST_IO_API_KEY = "bf2d9e782a47a7bb172f7800f73c566f";
 
   /**
    * The time in milliseconds between API calls to update the weather.
@@ -143,8 +144,8 @@ public class Weather extends DataUpdater<WeatherData> {
    */
   private static String getRequestUrl(Location location) {
     if (location != null) {
-      return String.format("https://api.forecast.io/forecast/%s/%f,%f", FORECAST_IO_API_KEY,
-          location.getLatitude(), location.getLongitude());
+      return String.format(Locale.ENGLISH, "https://api.forecast.io/forecast/%s/%f,%f?units=auto&lang=%s", FORECAST_IO_API_KEY,
+                           location.getLatitude(), location.getLongitude(), Locale.getDefault().getLanguage());
     } else {
       return null;
     }
