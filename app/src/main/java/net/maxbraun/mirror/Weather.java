@@ -141,10 +141,10 @@ public class Weather extends DataUpdater<WeatherData> {
    * Creates the URL for a Forecast API request based on the specified {@link Location} or
    * {@code null} if the location is unknown.
    */
-  private static String getRequestUrl(Location location) {
+   private static String getRequestUrl(Location location) {
     if (location != null) {
-      return String.format("https://api.forecast.io/forecast/%s/%f,%f", FORECAST_IO_API_KEY,
-          location.getLatitude(), location.getLongitude());
+      return String.format(Locale.US, "https://api.forecast.io/forecast/%s/%s,%s", FORECAST_IO_API_KEY,
+          getLat(location), getLong(location));
     } else {
       return null;
     }
