@@ -8,6 +8,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -143,8 +144,8 @@ public class Weather extends DataUpdater<WeatherData> {
    */
   private static String getRequestUrl(Location location) {
     if (location != null) {
-      return String.format("https://api.forecast.io/forecast/%s/%f,%f", FORECAST_IO_API_KEY,
-          location.getLatitude(), location.getLongitude());
+      return String.format(Locale.US, "https://api.forecast.io/forecast/%s/%f,%f",
+          FORECAST_IO_API_KEY, location.getLatitude(), location.getLongitude());
     } else {
       return null;
     }

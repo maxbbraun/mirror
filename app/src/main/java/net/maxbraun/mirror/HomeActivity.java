@@ -8,6 +8,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.List;
+import java.util.Locale;
 
 import net.maxbraun.mirror.DataUpdater.UpdateListener;
 import net.maxbraun.mirror.Weather.WeatherData;
@@ -38,7 +39,7 @@ public class HomeActivity extends Activity {
       if (data != null) {
 
         // Populate the current temperature rounded to a whole number.
-        String temperature = String.format("%d°", Math.round(data.currentTemperature));
+        String temperature = String.format(Locale.US, "%d°", Math.round(data.currentTemperature));
         temperatureView.setText(temperature);
 
         // Populate the 24-hour forecast summary, but strip any period at the end.
@@ -47,7 +48,7 @@ public class HomeActivity extends Activity {
 
         // Populate the precipitation probability as a percentage rounded to a whole number.
         String precipitation =
-            String.format("%d%%", Math.round(100 * data.dayPrecipitationProbability));
+            String.format(Locale.US, "%d%%", Math.round(100 * data.dayPrecipitationProbability));
         precipitationView.setText(precipitation);
 
         // Populate the icon for the current weather.

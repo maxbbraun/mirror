@@ -15,6 +15,11 @@ public class BootReceiver extends BroadcastReceiver {
 
   @Override
   public void onReceive(Context context, Intent intent) {
+    String action = intent.getAction();
+    if (!Intent.ACTION_BOOT_COMPLETED.equals(action)) {
+      Log.w(TAG, "Unexpected action:" + action);
+      return;
+    }
 
     // Launch HomeActivity once boot is complete. This is useful on platforms where we aren't
     // allowed to replace the launcher, e.g. an unrooted Fire TV Stick. It's not necessary if we are

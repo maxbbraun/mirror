@@ -10,6 +10,8 @@ import android.widget.TextView;
 import net.maxbraun.mirror.DataUpdater.UpdateListener;
 import net.maxbraun.mirror.Weather.WeatherData;
 
+import java.util.Locale;
+
 /**
  * A compact version of {@link HomeActivity}.
  */
@@ -25,7 +27,7 @@ public class CompactHomeActivity extends Activity {
       if (data != null) {
 
         // Populate the current temperature rounded to a whole number.
-        String temperature = String.format("%d°", Math.round(data.currentTemperature));
+        String temperature = String.format(Locale.US, "%d°", Math.round(data.currentTemperature));
         temperatureView.setText(temperature);
 
         // Populate the icon for the current weather.

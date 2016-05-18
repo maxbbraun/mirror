@@ -12,34 +12,34 @@
   </style>
 
   <style name="TemperatureStyle" parent="BaseTextStyle">
-    <item name="android:textSize">100dp</item>
+    <item name="android:textSize">100sp</item>
     <item name="android:fontFamily">sans-serif-thin</item>
   </style>
 
   <style name="TemperatureStyleCompact" parent="TemperatureStyle">
-    <item name="android:textSize">200dp</item>
+    <item name="android:textSize">200sp</item>
     <item name="android:fontFamily">sans-serif-thin</item>
   </style>
 
   <style name="WeatherTextStyle" parent="BaseTextStyle">
-    <item name="android:textSize">30dp</item>
+    <item name="android:textSize">30sp</item>
     <item name="android:fontFamily">sans-serif-light</item>
     <item name="android:ellipsize">none</item>
     <item name="android:maxLines">3</item>
   </style>
 
   <style name="TimeStyle" parent="BaseTextStyle">
-    <item name="android:textSize">100dp</item>
+    <item name="android:textSize">100sp</item>
     <item name="android:fontFamily">sans-serif-thin</item>
   </style>
 
   <style name="DateStyle" parent="BaseTextStyle">
-    <item name="android:textSize">30dp</item>
+    <item name="android:textSize">30sp</item>
     <item name="android:fontFamily">sans-serif-light</item>
   </style>
 
   <style name="NewsStyle" parent="BaseTextStyle">
-    <item name="android:textSize">20dp</item>
+    <item name="android:textSize">20sp</item>
     <item name="android:fontFamily">sans-serif-light</item>
     <item name="android:ellipsize">end</item>
     <item name="android:singleLine">true</item>
