@@ -63,6 +63,7 @@
       android:layout_alignParentRight="true"
       android:layout_alignParentTop="true"
       android:format12Hour="h\uee01mm"
+      android:format24Hour="H\uee01mm"
       android:gravity="right"/>
 
   <TextClock
@@ -73,6 +74,7 @@
       android:layout_alignParentRight="true"
       android:layout_below="@id/time"
       android:format12Hour="EEEE\nMMMM d"
+      android:format24Hour="EEEE\nd MMMM"
       android:gravity="right"/>
 
   <!-- News -->
