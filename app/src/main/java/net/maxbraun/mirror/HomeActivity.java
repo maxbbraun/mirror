@@ -10,6 +10,7 @@ import android.widget.TextView;
 import java.util.List;
 import java.util.Locale;
 
+import net.maxbraun.mirror.Body.BodyMeasure;
 import net.maxbraun.mirror.DataUpdater.UpdateListener;
 import net.maxbraun.mirror.Weather.WeatherData;
 
@@ -39,7 +40,8 @@ public class HomeActivity extends Activity {
       if (data != null) {
 
         // Populate the current temperature rounded to a whole number.
-        String temperature = String.format(Locale.US, "%d°", Math.round(data.currentTemperature));
+        String temperature = String.format(Locale.US, "%d°",
+            Math.round(getLocalizedTemperature(data.currentTemperature)));
         temperatureView.setText(temperature);
 
         // Populate the 24-hour forecast summary, but strip any period at the end.
@@ -90,14 +92,32 @@ public class HomeActivity extends Activity {
     }
   };
 
+  /**
+   * The listener used to populate the UI with body measurements.
+   */
+  private final UpdateListener<BodyMeasure[]> bodyUpdateListener =
+      new UpdateListener<BodyMeasure[]>() {
+        @Override
+        public void onUpdate(BodyMeasure[] bodyMeasures) {
+          if (bodyMeasures != null) {
+            bodyView.setBodyMeasures(bodyMeasures);
+            bodyView.setVisibility(View.VISIBLE);
+          } else {
+            bodyView.setVisibility(View.GONE);
+          }
+        }
+      };
+
   private TextView temperatureView;
   private TextView weatherSummaryView;
   private TextView precipitationView;
   private ImageView iconView;
   private TextView[] newsViews = new TextView[NEWS_VIEW_IDS.length];
+  private BodyView bodyView;
 
   private Weather weather;
   private News news;
+  private Body body;
   private Util util;
 
   @Override
@@ -112,9 +132,11 @@ public class HomeActivity extends Activity {
     for (int i = 0; i < NEWS_VIEW_IDS.length; i++) {
       newsViews[i] = (TextView) findViewById(NEWS_VIEW_IDS[i]);
     }
+    bodyView = (BodyView) findViewById(R.id.body);
 
     weather = new Weather(weatherUpdateListener);
     news = new News(newsUpdateListener);
+    body = new Body(bodyUpdateListener);
     util = new Util(this);
   }
 
@@ -123,12 +145,14 @@ public class HomeActivity extends Activity {
     super.onStart();
     weather.start();
     news.start();
+    body.start();
   }
 
   @Override
   protected void onStop() {
     weather.stop();
     news.stop();
+    body.stop();
     super.onStop();
   }
 
@@ -141,5 +165,15 @@ public class HomeActivity extends Activity {
   @Override
   public boolean onKeyUp(int keyCode, KeyEvent event) {
     return util.onKeyUp(keyCode, event);
+  }
+
+  /**
+   * Converts a temperature in degrees Fahrenheit to degrees Celsius, depending on the
+   * {@link Locale}.
+   */
+  private double getLocalizedTemperature(double temperatureFahrenheit) {
+    // First approximation: Fahrenheit for US and Celsius anywhere else.
+    return Locale.US.equals(Locale.getDefault()) ?
+        temperatureFahrenheit : (temperatureFahrenheit - 32.0) / 1.8;
   }
 }

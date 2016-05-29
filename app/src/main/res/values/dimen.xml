@@ -5,4 +5,11 @@
   <dimen name="icon_margin">10dp</dimen>
   <dimen name="inter_group_margin">15dp</dimen>
   <dimen name="intra_group_margin">10dp</dimen>
+  <dimen name="small_text_size">20sp</dimen>
+  <dimen name="medium_text_size">30sp</dimen>
+  <dimen name="large_text_size">100sp</dimen>
+  <dimen name="large_text_size_compact">200sp</dimen>
+  <dimen name="body_dot_radius">3dp</dimen>
+  <dimen name="body_line_width">2dp</dimen>
+  <dimen name="body_label_margin">6dp</dimen>
 </resources>
