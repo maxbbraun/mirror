@@ -32,7 +32,7 @@ public class Body extends DataUpdater<BodyMeasure[]> {
   /**
    * The time in milliseconds between API calls to update the body measures.
    */
-  private static final long UPDATE_INTERVAL_MILLIS = TimeUnit.HOURS.toMillis(1);
+  private static final long UPDATE_INTERVAL_MILLIS = TimeUnit.MINUTES.toMillis(5);
 
   /**
    * A timestamped body measure data point.
