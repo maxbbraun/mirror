@@ -20,11 +20,11 @@ import net.maxbraun.mirror.Weather.WeatherData;
 public class Weather extends DataUpdater<WeatherData> {
   private static final String TAG = Weather.class.getSimpleName();
 
-  // TODO: Replace the API key with a valid one from https://developer.forecast.io
+  // TODO: Replace the API key with a valid one from https://darksky.net/dev/
   /**
-   * The key used for the Forecast API.
+   * The key used for the Dark Sky API.
    */
-  private static final String FORECAST_IO_API_KEY = "58b42a8aa74df3e828442a4fb79f5dba";
+  private static final String DARK_SKY_API_KEY = "";
 
   /**
    * The time in milliseconds between API calls to update the weather.
@@ -32,7 +32,7 @@ public class Weather extends DataUpdater<WeatherData> {
   private static final long UPDATE_INTERVAL_MILLIS = TimeUnit.MINUTES.toMillis(5);
 
   /**
-   * A {@link Map} from Forecast's icon code to the corresponding drawable resource ID.
+   * A {@link Map} from Dark Sky's icon code to the corresponding drawable resource ID.
    */
   private final Map<String, Integer> iconResources = new HashMap<String, Integer>() {{
     put("clear-day", R.drawable.clear_day);
@@ -114,11 +114,11 @@ public class Weather extends DataUpdater<WeatherData> {
     }
 
 
-    // Get the latest data from the Forecast API.
+    // Get the latest data from the Dark Sky API.
     String requestUrl = getRequestUrl(location);
 
     // Parse the data we are interested in from the response JSON.
-    // Forecast API documentation: https://developer.forecast.io/docs/v2
+    // Dark Sky API documentation: https://darksky.net/dev/docs
     try {
       JSONObject response = makeRequest(requestUrl);
       if (response != null) {
@@ -139,13 +139,13 @@ public class Weather extends DataUpdater<WeatherData> {
   }
 
   /**
-   * Creates the URL for a Forecast API request based on the specified {@link Location} or
+   * Creates the URL for a Dark Sky API request based on the specified {@link Location} or
    * {@code null} if the location is unknown.
    */
   private static String getRequestUrl(Location location) {
     if (location != null) {
-      return String.format(Locale.US, "https://api.forecast.io/forecast/%s/%f,%f",
-          FORECAST_IO_API_KEY, location.getLatitude(), location.getLongitude());
+      return String.format(Locale.US, "https://api.darksky.net/forecast/%s/%f,%f",
+          DARK_SKY_API_KEY, location.getLatitude(), location.getLongitude());
     } else {
       return null;
     }
