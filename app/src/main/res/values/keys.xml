@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+  <!-- Get the Dark Sky API key from: https://darksky.net/dev/ -->
+  <string name="dark_sky_api_key"></string>
+
+  <!-- Get the Withings OAuth keys from: http://oauth.withings.com/api -->
+  <string name="withings_consumer_key"></string>
+  <string name="withings_nonce"></string>
+  <string name="withings_signature"></string>
+  <string name="withings_token"></string>
+  <string name="withings_userid"></string>
+</resources>

@@ -134,9 +134,9 @@ public class HomeActivity extends Activity {
     }
     bodyView = (BodyView) findViewById(R.id.body);
 
-    weather = new Weather(weatherUpdateListener);
+    weather = new Weather(this, weatherUpdateListener);
     news = new News(newsUpdateListener);
-    body = new Body(bodyUpdateListener);
+    body = new Body(this, bodyUpdateListener);
     util = new Util(this);
   }
 

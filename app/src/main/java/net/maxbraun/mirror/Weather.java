@@ -1,5 +1,6 @@
 package net.maxbraun.mirror;
 
+import android.content.Context;
 import android.location.Location;
 import android.util.Log;
 
@@ -20,16 +21,15 @@ import net.maxbraun.mirror.Weather.WeatherData;
 public class Weather extends DataUpdater<WeatherData> {
   private static final String TAG = Weather.class.getSimpleName();
 
-  // TODO: Replace the API key with a valid one from https://darksky.net/dev/
-  /**
-   * The key used for the Dark Sky API.
-   */
-  private static final String DARK_SKY_API_KEY = "";
-
   /**
    * The time in milliseconds between API calls to update the weather.
    */
   private static final long UPDATE_INTERVAL_MILLIS = TimeUnit.MINUTES.toMillis(5);
+
+  /**
+   * The context used to load string resources.
+   */
+  private final Context context;
 
   /**
    * A {@link Map} from Dark Sky's icon code to the corresponding drawable resource ID.
@@ -98,8 +98,9 @@ public class Weather extends DataUpdater<WeatherData> {
     }
   }
 
-  public Weather(UpdateListener<WeatherData> updateListener) {
+  public Weather(Context context, UpdateListener<WeatherData> updateListener) {
     super(updateListener, UPDATE_INTERVAL_MILLIS);
+    this.context = context;
   }
 
   @Override
@@ -142,10 +143,12 @@ public class Weather extends DataUpdater<WeatherData> {
    * Creates the URL for a Dark Sky API request based on the specified {@link Location} or
    * {@code null} if the location is unknown.
    */
-  private static String getRequestUrl(Location location) {
+  private String getRequestUrl(Location location) {
     if (location != null) {
       return String.format(Locale.US, "https://api.darksky.net/forecast/%s/%f,%f",
-          DARK_SKY_API_KEY, location.getLatitude(), location.getLongitude());
+          context.getString(R.string.dark_sky_api_key),
+          location.getLatitude(),
+          location.getLongitude());
     } else {
       return null;
     }

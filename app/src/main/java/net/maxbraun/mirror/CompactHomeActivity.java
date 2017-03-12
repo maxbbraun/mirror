@@ -59,7 +59,7 @@ public class CompactHomeActivity extends Activity {
     temperatureView = (TextView) findViewById(R.id.temperature);
     iconView = (ImageView) findViewById(R.id.icon);
 
-    weather = new Weather(weatherUpdateListener);
+    weather = new Weather(this, weatherUpdateListener);
     util = new Util(this);
   }
 

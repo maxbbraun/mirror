@@ -1,5 +1,6 @@
 package net.maxbraun.mirror;
 
+import android.content.Context;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -22,17 +23,15 @@ import org.json.JSONObject;
 public class Body extends DataUpdater<BodyMeasure[]> {
   private static final String TAG = Body.class.getSimpleName();
 
-  // TODO: Replace OAuth keys with valid ones from http://oauth.withings.com/api
-  private static final String WITHINGS_CONSUMER_KEY = "";
-  private static final String WITHINGS_NONCE = "";
-  private static final String WITHINGS_SIGNATURE = "";
-  private static final String WITHINGS_TOKEN = "";
-  private static final String WITHINGS_USERID = "";
-
   /**
    * The time in milliseconds between API calls to update the body measures.
    */
   private static final long UPDATE_INTERVAL_MILLIS = TimeUnit.MINUTES.toMillis(5);
+
+  /**
+   * The context used to load string resources.
+   */
+  private final Context context;
 
   /**
    * A timestamped body measure data point.
@@ -55,8 +54,9 @@ public class Body extends DataUpdater<BodyMeasure[]> {
     }
   }
 
-  public Body(UpdateListener<BodyMeasure[]> updateListener) {
+  public Body(Context context, UpdateListener<BodyMeasure[]> updateListener) {
     super(updateListener, UPDATE_INTERVAL_MILLIS);
+    this.context = context;
   }
 
   @Override
@@ -145,7 +145,7 @@ public class Body extends DataUpdater<BodyMeasure[]> {
   /**
    * Creates the URL for a Withings API request based on the current time.
    */
-  private static String getRequestUrl() {
+  private String getRequestUrl() {
     long requestTimestamp = System.currentTimeMillis() / 1000;
     long startTimestamp = getStartTimestamp();
 
@@ -161,12 +161,12 @@ public class Body extends DataUpdater<BodyMeasure[]> {
         "&userid=%s" +
         "&startdate=%d" +
         "&meastype=1",
-        WITHINGS_CONSUMER_KEY,
-        WITHINGS_NONCE,
-        WITHINGS_SIGNATURE,
-        WITHINGS_TOKEN,
+        context.getString(R.string.withings_consumer_key),
+        context.getString(R.string.withings_nonce),
+        context.getString(R.string.withings_signature),
+        context.getString(R.string.withings_token),
         requestTimestamp,
-        WITHINGS_USERID,
+        context.getString(R.string.withings_userid),
         startTimestamp);
   }
 
