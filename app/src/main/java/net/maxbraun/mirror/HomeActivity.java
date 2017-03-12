@@ -2,6 +2,7 @@ package net.maxbraun.mirror;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageView;
@@ -108,16 +109,34 @@ public class HomeActivity extends Activity {
         }
       };
 
+  /**
+   * The listener used to populate the UI with the commute summary.
+   */
+  private final UpdateListener<String> commuteUpdateListener =
+      new UpdateListener<String>() {
+        @Override
+        public void onUpdate(String summary) {
+          if (!TextUtils.isEmpty(summary)) {
+            commuteView.setText(summary);
+            commuteView.setVisibility(View.VISIBLE);
+          } else {
+            commuteView.setVisibility(View.GONE);
+          }
+        }
+      };
+
   private TextView temperatureView;
   private TextView weatherSummaryView;
   private TextView precipitationView;
   private ImageView iconView;
   private TextView[] newsViews = new TextView[NEWS_VIEW_IDS.length];
   private BodyView bodyView;
+  private TextView commuteView;
 
   private Weather weather;
   private News news;
   private Body body;
+  private Commute commute;
   private Util util;
 
   @Override
@@ -133,10 +152,12 @@ public class HomeActivity extends Activity {
       newsViews[i] = (TextView) findViewById(NEWS_VIEW_IDS[i]);
     }
     bodyView = (BodyView) findViewById(R.id.body);
+    commuteView = (TextView) findViewById(R.id.commute);
 
     weather = new Weather(this, weatherUpdateListener);
     news = new News(newsUpdateListener);
     body = new Body(this, bodyUpdateListener);
+    commute = new Commute(this, commuteUpdateListener);
     util = new Util(this);
   }
 
@@ -146,6 +167,7 @@ public class HomeActivity extends Activity {
     weather.start();
     news.start();
     body.start();
+    commute.start();
   }
 
   @Override
@@ -153,6 +175,7 @@ public class HomeActivity extends Activity {
     weather.stop();
     news.stop();
     body.stop();
+    commute.stop();
     super.onStop();
   }
 

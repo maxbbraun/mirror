@@ -2,6 +2,9 @@ package net.maxbraun.mirror;
 
 import android.util.Log;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -58,6 +61,19 @@ public abstract class Network {
       if (connection != null) {
         connection.disconnect();
       }
+    }
+  }
+
+  /**
+   * Makes a network request at the specified URL, expecting a JSON response.
+   */
+  public static JSONObject getJson(String requestUrl) throws JSONException {
+    String response = Network.get(requestUrl);
+    if (response != null) {
+      return new JSONObject(response);
+    } else {
+      Log.w(TAG, "Empty response.");
+      return null;
     }
   }
 }

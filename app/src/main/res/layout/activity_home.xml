@@ -49,7 +49,7 @@
       android:layout_height="wrap_content"
       android:layout_alignParentLeft="true"
       android:layout_below="@id/weather_summary"
-      android:layout_marginTop="@dimen/inter_group_margin"
+      android:layout_marginTop="@dimen/precipitation_margin"
       android:drawableLeft="@drawable/umbrella"
       android:drawablePadding="@dimen/icon_margin"
       tools:text="6%"/>
@@ -67,7 +67,7 @@
       android:gravity="right"/>
 
   <TextClock
-      android:id="@+id/day_of_the_week"
+      android:id="@+id/date"
       style="@style/DateStyle"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
@@ -90,7 +90,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="left"
-        android:layout_marginBottom="@dimen/intra_group_margin"
+        android:layout_marginBottom="@dimen/news_line_margin"
         android:drawableLeft="@drawable/news_ap"
         android:drawablePadding="@dimen/icon_margin"
         tools:text="Obama, Sanders at the White House: Nice chat but that's all"/>
@@ -101,7 +101,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="left"
-        android:layout_marginBottom="@dimen/intra_group_margin"
+        android:layout_marginBottom="@dimen/news_line_margin"
         android:drawableLeft="@drawable/news_ap"
         android:drawablePadding="@dimen/icon_margin"
         tools:text="Debate feud injects fresh chaos into GOP primary"/>
@@ -112,7 +112,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="left"
-        android:layout_marginBottom="@dimen/intra_group_margin"
+        android:layout_marginBottom="@dimen/news_line_margin"
         android:drawableLeft="@drawable/news_ap"
         android:drawablePadding="@dimen/icon_margin"
         tools:text="Rancher killed in standoff vowed to die before going to jail"/>
@@ -123,7 +123,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="left"
-        android:layout_marginBottom="@dimen/intra_group_margin"
+        android:layout_marginBottom="@dimen/news_line_margin"
         android:drawableLeft="@drawable/news_ap"
         android:drawablePadding="@dimen/icon_margin"
         tools:text="Authorities: Last activists should leave wildlife preserve"/>
@@ -133,8 +133,26 @@
   <net.maxbraun.mirror.BodyView
       android:id="@+id/body"
       android:layout_width="250dp"
-      android:layout_height="200dp"
+      android:layout_height="180dp"
       android:layout_alignParentRight="true"
       android:layout_alignParentBottom="true"
-      android:layout_marginBottom="@dimen/intra_group_margin"/>
+      android:layout_marginBottom="@dimen/news_line_margin"/>
+
+  <!-- Commute -->
+  <FrameLayout
+      android:layout_width="wrap_content"
+      android:layout_height="match_parent"
+      android:layout_below="@id/date"
+      android:layout_above="@id/body"
+      android:layout_alignParentRight="true">
+    <TextView
+        android:id="@+id/commute"
+        style="@style/CommuteTextStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:drawableLeft="@drawable/car"
+        android:drawablePadding="@dimen/icon_margin"
+        tools:text="39 mins via US-101"/>
+  </FrameLayout>
 </RelativeLayout>

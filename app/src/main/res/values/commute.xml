@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+  <!-- Your home address in any reasonable format. -->
+  <string name="home">HOME_ADDRESS</string>
+
+  <!-- Your work address in any reasonable format. -->
+  <string name="work">WORK_ADDRESS</string>
+
+  <!-- Your travel mode: https://developers.google.com/maps/documentation/directions/intro#TravelModes -->
+  <string name="travel_mode">driving</string>
+</resources>

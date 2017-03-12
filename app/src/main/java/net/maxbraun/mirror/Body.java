@@ -65,9 +65,8 @@ public class Body extends DataUpdater<BodyMeasure[]> {
     String requestUrl = getRequestUrl();
 
     // Parse the data we are interested in from the response JSON.
-    // Withings API documentation: http://oauth.withings.com/api/doc
     try {
-      JSONObject response = makeRequest(requestUrl);
+      JSONObject response = Network.getJson(requestUrl);
       if (response != null) {
         return parseBodyMeasures(response);
       } else {
@@ -80,20 +79,8 @@ public class Body extends DataUpdater<BodyMeasure[]> {
   }
 
   /**
-   * Makes a network request at the specified URL, expecting a JSON response.
-   */
-  private static JSONObject makeRequest(String requestUrl) throws JSONException {
-    String response = Network.get(requestUrl);
-    if (response != null) {
-      return new JSONObject(response);
-    } else {
-      Log.w(TAG, "Empty response.");
-      return null;
-    }
-  }
-
-  /**
-   * Reads the body measure data points from the API response.
+   * Reads the body measure data points from the API response. API documentation:
+   * http://oauth.withings.com/api/doc
    */
   private static BodyMeasure[] parseBodyMeasures(JSONObject response) throws JSONException {
     int status = response.getInt("status");
