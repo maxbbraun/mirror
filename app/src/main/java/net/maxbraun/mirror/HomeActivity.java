@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Locale;
 
 import net.maxbraun.mirror.Body.BodyMeasure;
+import net.maxbraun.mirror.Commute.CommuteSummary;
 import net.maxbraun.mirror.DataUpdater.UpdateListener;
 import net.maxbraun.mirror.Weather.WeatherData;
 
@@ -112,15 +113,25 @@ public class HomeActivity extends Activity {
   /**
    * The listener used to populate the UI with the commute summary.
    */
-  private final UpdateListener<String> commuteUpdateListener =
-      new UpdateListener<String>() {
+  private final UpdateListener<CommuteSummary> commuteUpdateListener =
+      new UpdateListener<CommuteSummary>() {
         @Override
-        public void onUpdate(String summary) {
-          if (!TextUtils.isEmpty(summary)) {
-            commuteView.setText(summary);
-            commuteView.setVisibility(View.VISIBLE);
+        public void onUpdate(CommuteSummary summary) {
+          if (summary != null) {
+            commuteTextView.setText(summary.text);
+            commuteTextView.setVisibility(View.VISIBLE);
+            travelModeView.setImageDrawable(summary.travelModeIcon);
+            travelModeView.setVisibility(View.VISIBLE);
+            if (summary.trafficTrendIcon != null) {
+              trafficTrendView.setImageDrawable(summary.trafficTrendIcon);
+              trafficTrendView.setVisibility(View.VISIBLE);
+            } else {
+              trafficTrendView.setVisibility(View.GONE);
+            }
           } else {
-            commuteView.setVisibility(View.GONE);
+            commuteTextView.setVisibility(View.GONE);
+            travelModeView.setVisibility(View.GONE);
+            trafficTrendView.setVisibility(View.GONE);
           }
         }
       };
@@ -131,7 +142,9 @@ public class HomeActivity extends Activity {
   private ImageView iconView;
   private TextView[] newsViews = new TextView[NEWS_VIEW_IDS.length];
   private BodyView bodyView;
-  private TextView commuteView;
+  private TextView commuteTextView;
+  private ImageView travelModeView;
+  private ImageView trafficTrendView;
 
   private Weather weather;
   private News news;
@@ -152,7 +165,9 @@ public class HomeActivity extends Activity {
       newsViews[i] = (TextView) findViewById(NEWS_VIEW_IDS[i]);
     }
     bodyView = (BodyView) findViewById(R.id.body);
-    commuteView = (TextView) findViewById(R.id.commute);
+    commuteTextView = (TextView) findViewById(R.id.commuteText);
+    travelModeView = (ImageView) findViewById(R.id.travelMode);
+    trafficTrendView = (ImageView) findViewById(R.id.trafficTrend);
 
     weather = new Weather(this, weatherUpdateListener);
     news = new News(newsUpdateListener);

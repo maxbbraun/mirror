@@ -145,14 +145,32 @@
       android:layout_below="@id/date"
       android:layout_above="@id/body"
       android:layout_alignParentRight="true">
-    <TextView
-        android:id="@+id/commute"
-        style="@style/CommuteTextStyle"
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:drawableLeft="@drawable/car"
-        android:drawablePadding="@dimen/icon_margin"
-        tools:text="39 mins via US-101"/>
+        android:layout_gravity="center_vertical"
+        android:orientation="horizontal">
+      <ImageView
+          android:id="@+id/travelMode"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_gravity="center_vertical"
+          tools:src="@drawable/driving"
+          android:layout_marginRight="@dimen/icon_margin"/>
+      <ImageView
+          android:id="@+id/trafficTrend"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_gravity="center_vertical"
+          tools:src="@drawable/trend_up"
+          android:layout_marginRight="@dimen/icon_margin"/>
+      <TextView
+          android:id="@+id/commuteText"
+          style="@style/CommuteTextStyle"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_gravity="center_vertical"
+          tools:text="39 mins via US-101"/>
+    </LinearLayout>
   </FrameLayout>
 </RelativeLayout>
