@@ -35,7 +35,7 @@ public class Commute extends DataUpdater<CommuteSummary> {
   /**
    * The time delta in seconds below which the traffic trend is considered flat.
    */
-  private static final long TREND_THRESHOLD_SECONDS = TimeUnit.MINUTES.toSeconds(5);
+  private static final long TREND_THRESHOLD_SECONDS = TimeUnit.MINUTES.toSeconds(2);
 
   /**
    * The travel mode using standard driving directions using the road network.
