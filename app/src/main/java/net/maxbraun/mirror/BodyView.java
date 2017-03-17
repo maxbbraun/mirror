@@ -1,6 +1,7 @@
 package net.maxbraun.mirror;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -42,9 +43,19 @@ public class BodyView extends View {
   private static final SimpleDateFormat DATE_FORMAT_24H = new SimpleDateFormat("d MMMM");
 
   /**
-   * The {@link Paint} used to draw the dots.
+   * The {@link Paint} used to draw white dots.
    */
-  private final Paint dotPaint;
+  private final Paint whiteDotPaint;
+
+  /**
+   * The {@link Paint} used to draw red dots.
+   */
+  private final Paint redDotPaint;
+
+  /**
+   * The {@link Paint} used to draw green dots.
+   */
+  private final Paint greenDotPaint;
 
   /**
    * The {@link Paint} used to draw the line.
@@ -105,11 +116,24 @@ public class BodyView extends View {
 
   public BodyView(final Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
     super(context, attrs, defStyleAttr, defStyleRes);
+    final Resources resources = context.getResources();
 
     dotRadiusPixels = getResources().getDimension(R.dimen.body_dot_radius);
 
-    dotPaint = new Paint() {{
+    whiteDotPaint = new Paint() {{
       setColor(Color.WHITE);
+      setAntiAlias(true);
+      setStyle(Style.FILL);
+    }};
+
+    redDotPaint = new Paint() {{
+      setColor(resources.getColor(R.color.red));
+      setAntiAlias(true);
+      setStyle(Style.FILL);
+    }};
+
+    greenDotPaint = new Paint() {{
+      setColor(resources.getColor(R.color.green));
       setAntiAlias(true);
       setStyle(Style.FILL);
     }};
@@ -215,10 +239,20 @@ public class BodyView extends View {
     float rightMargin = dotRadiusPixels + maxTimestampWeightLabelWidth + labelMarginPixels;
     float bottomMargin = dotRadiusPixels + labelHeight + labelMarginPixels;
 
-    // Iterate over all measures to draw the chart.
+    // Iterate over all measures to calculate the chart data.
+    float maxWeightDotX = 0;
+    float maxWeightDotY = 0;
+    String maxWeightLabel = null;
+    float maxWeightLabelX = 0;
+    float maxWeightLabelY = 0;
+    float minWeightDotX = 0;
+    float minWeightDotY = 0;
+    String minWeightLabel = null;
+    float minWeightLabelX = 0;
+    float minWeightLabelY = 0;
+    float maxTimestampX = 0;
+    float maxTimestampY = 0;
     linePath.rewind();
-    boolean hasMaxWeightLabel = false;
-    boolean hasMinWeightLabel = false;
     for (int i = 0; i < bodyMeasures.length; i++) {
       BodyMeasure bodyMeasure = bodyMeasures[i];
       long timestamp = bodyMeasure.timestamp;
@@ -237,20 +271,23 @@ public class BodyView extends View {
       float weightLabelX = Math.min(Math.max(x - 0.5f * weightLabelWidth, 0.0f),
           canvas.getWidth() - weightLabelWidth);
 
-      // Draw a dot and the label for the maximum and minimum weights, but only once. The weight
-      // with the maximum timestamp also gets a dot.
-      if ((weight == maxWeight) && !hasMaxWeightLabel) {
-        hasMaxWeightLabel = true;
-        canvas.drawCircle(x, y, dotRadiusPixels, dotPaint);
-        float maxWeightLabelY = labelHeight - fontMetrics.descent;
-        canvas.drawText(weightLabel, weightLabelX, maxWeightLabelY, labelPaint);
-      } else if ((weight == minWeight) && !hasMinWeightLabel) {
-        hasMinWeightLabel = true;
-        canvas.drawCircle(x, y, dotRadiusPixels, dotPaint);
-        float minWeightLabelY = canvas.getHeight() - fontMetrics.descent;
-        canvas.drawText(weightLabel, weightLabelX, minWeightLabelY, labelPaint);
+      // Save the dot coordinates and the label for the maximum and minimum weights, but only once.
+      // The weight with the maximum timestamp also gets a dot.
+      if ((weight == maxWeight) && (maxWeightLabel == null)) {
+        maxWeightDotX = x;
+        maxWeightDotY = y;
+        maxWeightLabelX = weightLabelX;
+        maxWeightLabelY = labelHeight - fontMetrics.descent;
+        maxWeightLabel = weightLabel;
+      } else if ((weight == minWeight) && (minWeightLabel == null)) {
+        minWeightDotX = x;
+        minWeightDotY = y;
+        minWeightLabelX = weightLabelX;
+        minWeightLabelY = canvas.getHeight() - fontMetrics.descent;
+        minWeightLabel = weightLabel;
       } else if (timestamp == maxTimestamp) {
-        canvas.drawCircle(x, y, dotRadiusPixels, dotPaint);
+        maxTimestampX = x;
+        maxTimestampY = y;
       }
 
       // Append to the line.
@@ -264,9 +301,20 @@ public class BodyView extends View {
     // Draw the line.
     canvas.drawPath(linePath, linePaint);
 
+    // Draw dots and labels for the maximum and minimum weights.
+    if (maxWeightLabel != null) {
+      canvas.drawCircle(maxWeightDotX, maxWeightDotY, dotRadiusPixels, redDotPaint);
+      canvas.drawText(maxWeightLabel, maxWeightLabelX, maxWeightLabelY, labelPaint);
+    }
+    if (minWeightLabel != null) {
+      canvas.drawCircle(minWeightDotX, minWeightDotY, dotRadiusPixels, greenDotPaint);
+      canvas.drawText(minWeightLabel, minWeightLabelX, minWeightLabelY, labelPaint);
+    }
+
     // Draw a dot and a label for the weight at the maximum timestamp, unless it is identical to the
-    // minimum or maximum weight.
+    // minimum or maximum weight and shouldn't get a label.
     if (maxTimestampWeightLabel != null) {
+      canvas.drawCircle(maxTimestampX, maxTimestampY, dotRadiusPixels, whiteDotPaint);
       float maxTimestampWeightLabelX = canvas.getWidth() - maxTimestampWeightLabelWidth;
       float maxTimestampWeightLabelY = project((float) maxTimestampWeight, (float) minWeight,
           (float) maxWeight, canvas.getHeight() - bottomMargin, topMargin)
