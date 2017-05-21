@@ -8,7 +8,7 @@ Simply import the whole project into [Android Studio](http://developer.android.c
 
 While the time, date, and news show up without any additional changes, you need to first enable the respective APIs in order to see the weather, commute, and body measures. Edit [`keys.xml`](app/src/main/res/values/keys.xml) and enter the API key for the [Dark Sky API](https://darksky.net/dev/) and multiple keys for the [Withings API](http://oauth.withings.com/api). (Follow [step 1](http://oauth.withings.com/api#step1) through [step 4](http://oauth.withings.com/api#step2) and copy all keys from the last output.) The home and work addresses for the commute need to be entered in [`commute.xml`](app/src/main/res/values/commute.xml).
 
-##License
+## License
 
 Copyright 2016 Max Braun
 
