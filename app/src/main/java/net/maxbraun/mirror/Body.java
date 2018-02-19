@@ -34,6 +34,31 @@ public class Body extends DataUpdater<BodyMeasure[]> {
   private final Context context;
 
   /**
+   * The OAuth 1.0 keys for the Nokia Health API.
+   */
+  private final Network.OAuth1KeyProvider nokiaHealthApiKeys = new Network.OAuth1KeyProvider() {
+    @Override
+    public String getApiKey() {
+      return context.getString(R.string.nokia_health_consumer_key);
+    }
+
+    @Override
+    public String getApiSecret() {
+      return context.getString(R.string.nokia_health_consumer_secret);
+    }
+
+    @Override
+    public String getAccessToken() {
+      return context.getString(R.string.nokia_health_request_token_key);
+    }
+
+    @Override
+    public String getAccessTokenSecret() {
+      return context.getString(R.string.nokia_health_request_token_secret);
+    }
+  };
+
+  /**
    * A timestamped body measure data point.
    */
   public static class BodyMeasure {
@@ -61,26 +86,27 @@ public class Body extends DataUpdater<BodyMeasure[]> {
 
   @Override
   protected BodyMeasure[] getData() {
-    // Get the latest data from the Withings API.
+    // Get the latest data from the Nokia Health API.
     String requestUrl = getRequestUrl();
 
     // Parse the data we are interested in from the response JSON.
     try {
-      JSONObject response = Network.getJson(requestUrl);
+      JSONObject response = Network.getJson(requestUrl, NokiaHealthApi.instance(),
+          nokiaHealthApiKeys);
       if (response != null) {
         return parseBodyMeasures(response);
       } else {
         return null;
       }
     } catch (JSONException e) {
-      Log.e(TAG, "Failed to parse weather JSON.", e);
+      Log.e(TAG, "Failed to parse body JSON.", e);
       return null;
     }
   }
 
   /**
    * Reads the body measure data points from the API response. API documentation:
-   * http://oauth.withings.com/api/doc
+   * https://developer.health.nokia.com/api/doc
    */
   private static BodyMeasure[] parseBodyMeasures(JSONObject response) throws JSONException {
     int status = response.getInt("status");
@@ -130,31 +156,15 @@ public class Body extends DataUpdater<BodyMeasure[]> {
   }
 
   /**
-   * Creates the URL for a Withings API request based on the current time.
+   * Creates the URL for a Nokia Health API request based on the current time.
    */
   private String getRequestUrl() {
-    long requestTimestamp = System.currentTimeMillis() / 1000;
-    long startTimestamp = getStartTimestamp();
-
-    return String.format(Locale.US, "http://wbsapi.withings.net/measure" +
+    return String.format(Locale.US,"http://api.health.nokia.com/measure" +
         "?action=getmeas" +
-        "&oauth_version=1.0" +
-        "&oauth_signature_method=HMAC-SHA1" +
-        "&oauth_consumer_key=%s" +
-        "&oauth_nonce=%s" +
-        "&oauth_signature=%s" +
-        "&oauth_token=%s" +
-        "&oauth_timestamp=%d" +
         "&userid=%s" +
-        "&startdate=%d" +
-        "&meastype=1",
-        context.getString(R.string.withings_consumer_key),
-        context.getString(R.string.withings_nonce),
-        context.getString(R.string.withings_signature),
-        context.getString(R.string.withings_token),
-        requestTimestamp,
-        context.getString(R.string.withings_userid),
-        startTimestamp);
+        "&startdate=%d",
+        context.getString(R.string.nokia_health_user_id),
+        getStartTimestamp());
   }
 
   /**

@@ -6,7 +6,7 @@ This is the source code for the prototype UI of my smart mirror project outlined
 
 Simply import the whole project into [Android Studio](http://developer.android.com/tools/studio/index.html), then build and run the apk.
 
-While the time, date, and news show up without any additional changes, you need to first enable the respective APIs in order to see the weather, commute, and body measures. Edit [`keys.xml`](app/src/main/res/values/keys.xml) and enter the API key for the [Dark Sky API](https://darksky.net/dev/) and multiple keys for the [Withings API](http://oauth.withings.com/api). (Follow [step 1](http://oauth.withings.com/api#step1) through [step 4](http://oauth.withings.com/api#step2) and copy all keys from the last output.) The home and work addresses for the commute need to be entered in [`commute.xml`](app/src/main/res/values/commute.xml).
+While the time, date, and news show up without any additional changes, you need to first enable the respective APIs in order to see the weather, commute, and body measures. Edit [`keys.xml`](app/src/main/res/values/keys.xml) and enter the API key for the [Dark Sky API](https://darksky.net/dev/) and multiple keys for the [Nokia Health API](https://developer.health.nokia.com/api). (Follow [step 1](https://developer.health.nokia.com/api#step1) through [step 4](https://developer.health.nokia.com/api#step4) and copy all keys from the last output.) The home and work addresses for the commute need to be entered in [`commute.xml`](app/src/main/res/values/commute.xml).
 
 ## License
 

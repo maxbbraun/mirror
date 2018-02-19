@@ -105,7 +105,6 @@ public class Weather extends DataUpdater<WeatherData> {
 
   @Override
   protected WeatherData getData() {
-
     // Lazy load the location.
     if (location == null) {
       // We're using geo location by IP, because many headless Android devices don't return anything

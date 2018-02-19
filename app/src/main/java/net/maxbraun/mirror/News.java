@@ -47,7 +47,6 @@ public class News extends DataUpdater<List<String>> {
 
   @Override
   protected List<String> getData() {
-
     // Get the latest headlines from the AP news feed.
     String response = Network.get(AP_TOP_HEADLINES_URL);
     if (response == null) {

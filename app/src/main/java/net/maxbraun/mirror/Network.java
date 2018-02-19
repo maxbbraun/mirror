@@ -2,6 +2,15 @@ package net.maxbraun.mirror;
 
 import android.util.Log;
 
+import com.github.scribejava.core.builder.ServiceBuilder;
+import com.github.scribejava.core.builder.api.BaseApi;
+import com.github.scribejava.core.model.OAuth1AccessToken;
+import com.github.scribejava.core.model.OAuthRequest;
+import com.github.scribejava.core.model.Response;
+import com.github.scribejava.core.model.Verb;
+import com.github.scribejava.core.oauth.OAuth10aService;
+import com.github.scribejava.core.oauth.OAuthService;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -11,6 +20,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.concurrent.ExecutionException;
 
 import javax.net.ssl.HttpsURLConnection;
 
@@ -19,6 +29,16 @@ import javax.net.ssl.HttpsURLConnection;
  */
 public abstract class Network {
   private static final String TAG = Network.class.getSimpleName();
+
+  /**
+   * A provider for OAuth 1.0 request keys.
+   */
+  public interface OAuth1KeyProvider {
+    String getApiKey();
+    String getApiSecret();
+    String getAccessToken();
+    String getAccessTokenSecret();
+  }
 
   /**
    * Makes a HTTP(S) GET request to the specified URL and returns the result as text or
@@ -65,6 +85,32 @@ public abstract class Network {
   }
 
   /**
+   * Like {@link #get(String)}, but for OAuth 1.0 authenticated requests.
+   */
+  public static <S extends OAuthService> String get(String urlString, BaseApi<OAuth10aService> api,
+                                                    OAuth1KeyProvider keys) {
+    if (urlString == null) {
+      return null;
+    }
+    Log.d(TAG, "Requesting OAuth1 URL: " + urlString);
+
+    try {
+      OAuth10aService service = new ServiceBuilder(keys.getApiKey())
+          .apiSecret(keys.getApiSecret())
+          .build(api);
+      OAuth1AccessToken accessToken = new OAuth1AccessToken(keys.getAccessToken(),
+          keys.getAccessTokenSecret());
+      OAuthRequest request = new OAuthRequest(Verb.GET, urlString);
+      service.signRequest(accessToken, request);
+      Response response = service.execute(request);
+      return response.getBody();
+    } catch (IOException | InterruptedException | ExecutionException e) {
+      Log.e(TAG, "OAuth request failed.", e);
+      return null;
+    }
+  }
+
+  /**
    * Makes a network request at the specified URL, expecting a JSON response.
    */
   public static JSONObject getJson(String requestUrl) throws JSONException {
@@ -73,6 +119,20 @@ public abstract class Network {
       return new JSONObject(response);
     } else {
       Log.w(TAG, "Empty response.");
+      return null;
+    }
+  }
+
+  /**
+   * Like {@link #getJson(String)}, but for OAuth 1.0 authenticated requests.
+   */
+  public static JSONObject getJson(String requestUrl, BaseApi<OAuth10aService> api,
+                                   OAuth1KeyProvider keys) throws JSONException {
+    String response = Network.get(requestUrl, api, keys);
+    if (response != null) {
+      return new JSONObject(response);
+    } else {
+      Log.w(TAG, "Empty OAuth response.");
       return null;
     }
   }

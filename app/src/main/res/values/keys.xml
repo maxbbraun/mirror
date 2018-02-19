@@ -4,12 +4,12 @@
   <!-- Get the Dark Sky API key from: https://darksky.net/dev/ -->
   <string name="dark_sky_api_key">DARK_SKY_API_KEY</string>
 
-  <!-- Get the Withings OAuth keys from: http://oauth.withings.com/api -->
-  <string name="withings_consumer_key">WITHINGS_CONSUMER_KEY</string>
-  <string name="withings_nonce">WITHINGS_NONCE</string>
-  <string name="withings_signature">WITHINGS_SIGNATURE</string>
-  <string name="withings_token">WITHINGS_TOKEN</string>
-  <string name="withings_userid">WITHINGS_USERID</string>
+  <!-- Get the Nokia Health API keys from: https://developer.health.nokia.com/api -->
+  <string name="nokia_health_consumer_key">NOKIA_HEALTH_CONSUMER_KEY</string>
+  <string name="nokia_health_consumer_secret">NOKIA_HEALTH_CONSUMER_SECRET</string>
+  <string name="nokia_health_request_token_key">NOKIA_HEALTH_REQUEST_TOKEN_KEY</string>
+  <string name="nokia_health_request_token_secret">NOKIA_HEALTH_REQUEST_TOKEN_SECRET</string>
+  <string name="nokia_health_user_id">NOKIA_HEALTH_USER_ID</string>
 
   <!-- Get the Google Maps Directions API key from: https://developers.google.com/maps/documentation/directions/ -->
   <string name="google_maps_directions_api_key">GOOGLE_MAPS_DIRECTIONS_API_KEY</string>

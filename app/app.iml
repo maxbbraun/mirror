@@ -117,7 +117,9 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="com.android.support:support-annotations:23.4.0@jar" level="project" />
     <orderEntry type="library" name="com.android.support:support-v4-23.4.0" level="project" />
+    <orderEntry type="library" name="com.github.scribejava:scribejava-apis:5.2.0-java7again@jar" level="project" />
     <orderEntry type="library" name="com.android.support:leanback-v17-23.4.0" level="project" />
+    <orderEntry type="library" name="com.github.scribejava:scribejava-core:5.2.0-java7again@jar" level="project" />
     <orderEntry type="library" name="com.android.support:recyclerview-v7-23.4.0" level="project" />
   </component>
 </module>

@@ -100,7 +100,7 @@ public abstract class DataUpdater<Data> {
    * Performs the update by retrieving the data and updating the listener.
    */
   private void update() {
-    Log.d(getTag(), "Updating.");
+    Log.d(getTag(), "Updating...");
 
     final Data data = getData();
     mainHandler.post(new Runnable() {
@@ -109,6 +109,7 @@ public abstract class DataUpdater<Data> {
         updateListener.onUpdate(data);
       }
     });
+    Log.d(getTag(), "Updated.");
   }
 
   /**
