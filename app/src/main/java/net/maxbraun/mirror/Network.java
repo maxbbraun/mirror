@@ -87,8 +87,7 @@ public abstract class Network {
   /**
    * Like {@link #get(String)}, but for OAuth 1.0 authenticated requests.
    */
-  public static <S extends OAuthService> String get(String urlString, BaseApi<OAuth10aService> api,
-                                                    OAuth1KeyProvider keys) {
+  public static String get(String urlString, BaseApi<OAuth10aService> api, OAuth1KeyProvider keys) {
     if (urlString == null) {
       return null;
     }
