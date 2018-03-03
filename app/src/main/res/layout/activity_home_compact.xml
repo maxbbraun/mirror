@@ -9,7 +9,9 @@
     android:paddingLeft="@dimen/outside_padding"
     android:paddingRight="@dimen/outside_padding">
 
+  <!-- Weather -->
   <LinearLayout
+      android:id="@+id/weather"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_centerHorizontal="true"
@@ -32,4 +34,18 @@
         android:layout_marginLeft="10dp"
         tools:src="@drawable/partly_cloudy_day"/>
   </LinearLayout>
+
+  <!-- Time and date -->
+  <TextClock
+      android:id="@+id/time"
+      style="@style/TimeStyleCompact"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_centerHorizontal="true"
+      android:layout_alignParentBottom="true"
+      android:format12Hour="h\uee01mm"
+      android:format24Hour="H\uee01mm"
+      android:gravity="center_horizontal"
+      tools:text="12\uee0134"
+      android:visibility="gone"/>
 </RelativeLayout>

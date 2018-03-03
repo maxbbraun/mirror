@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextClock;
 import android.widget.TextView;
 
 import net.maxbraun.mirror.DataUpdater.UpdateListener;
@@ -16,6 +17,19 @@ import java.util.Locale;
  * A compact version of {@link HomeActivity}.
  */
 public class CompactHomeActivity extends Activity {
+
+  /**
+   * Available modes for the UI.
+   */
+  private enum UiMode {
+    TIME,
+    WEATHER,
+  }
+
+  /**
+   * The current mode of the UI.
+   */
+  private UiMode uiMode = UiMode.TIME;
 
   /**
    * The listener used to populate the UI with weather data.
@@ -47,6 +61,7 @@ public class CompactHomeActivity extends Activity {
 
   private TextView temperatureView;
   private ImageView iconView;
+  private TextClock timeView;
 
   private Weather weather;
   private Util util;
@@ -56,29 +71,39 @@ public class CompactHomeActivity extends Activity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_home_compact);
 
+    timeView = (TextClock) findViewById(R.id.time);
+    timeView.setVisibility(uiMode == UiMode.TIME ? View.VISIBLE : View.GONE);
+
     temperatureView = (TextView) findViewById(R.id.temperature);
     iconView = (ImageView) findViewById(R.id.icon);
+    findViewById(R.id.weather).setVisibility(uiMode == UiMode.WEATHER ? View.VISIBLE : View.GONE);
 
-    weather = new Weather(this, weatherUpdateListener);
     util = new Util(this);
+    if (uiMode == UiMode.WEATHER) {
+      weather = new Weather(this, weatherUpdateListener);
+    }
   }
 
   @Override
   protected void onStart() {
     super.onStart();
-    weather.start();
+    if (uiMode == UiMode.WEATHER) {
+      weather.start();
+    }
   }
 
   @Override
   protected void onStop() {
-    weather.stop();
+    if (uiMode == UiMode.WEATHER) {
+      weather.stop();
+    }
     super.onStop();
   }
 
   @Override
   protected void onResume() {
     super.onResume();
-    util.hideNavigationBar(temperatureView);
+    util.hideNavigationBar(timeView);
   }
 
   @Override

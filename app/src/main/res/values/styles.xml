@@ -40,6 +40,11 @@
     <item name="android:fontFamily">sans-serif-thin</item>
   </style>
 
+  <style name="TimeStyleCompact" parent="BaseTextStyle">
+    <item name="android:textSize">@dimen/large_text_size_compact</item>
+    <item name="android:fontFamily">sans-serif-thin</item>
+  </style>
+
   <style name="DateStyle" parent="BaseTextStyle">
     <item name="android:textSize">@dimen/medium_text_size</item>
     <item name="android:fontFamily">sans-serif-light</item>

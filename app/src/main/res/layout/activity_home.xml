@@ -19,7 +19,6 @@
       android:layout_alignParentTop="true"
       android:gravity="left"
       tools:text="72°"/>
-
   <ImageView
       android:id="@+id/icon"
       android:layout_width="96dp"
@@ -30,7 +29,6 @@
       android:layout_marginLeft="5dp"
       android:layout_toRightOf="@id/temperature"
       tools:src="@drawable/partly_cloudy_day"/>
-
   <TextView
       android:id="@+id/weather_summary"
       style="@style/WeatherTextStyle"
@@ -41,7 +39,6 @@
       android:gravity="left"
       android:maxWidth="380dp"
       tools:text="Mostly cloudy until tomorrow evening"/>
-
   <TextView
       android:id="@+id/precipitation"
       style="@style/WeatherTextStyle"
@@ -64,8 +61,8 @@
       android:layout_alignParentTop="true"
       android:format12Hour="h\uee01mm"
       android:format24Hour="H\uee01mm"
-      android:gravity="right"/>
-
+      android:gravity="right"
+      tools:text="12\uee0134"/>
   <TextClock
       android:id="@+id/date"
       style="@style/DateStyle"
@@ -75,7 +72,8 @@
       android:layout_below="@id/time"
       android:format12Hour="EEEE\nMMMM d"
       android:format24Hour="EEEE\nd MMMM"
-      android:gravity="right"/>
+      android:gravity="right"
+      tools:text="Sunday\nMarch 4"/>
 
   <!-- News -->
   <LinearLayout
@@ -94,7 +92,6 @@
         android:drawableLeft="@drawable/news_ap"
         android:drawablePadding="@dimen/icon_margin"
         tools:text="Obama, Sanders at the White House: Nice chat but that's all"/>
-
     <TextView
         android:id="@+id/news_2"
         style="@style/NewsStyle"
@@ -105,7 +102,6 @@
         android:drawableLeft="@drawable/news_ap"
         android:drawablePadding="@dimen/icon_margin"
         tools:text="Debate feud injects fresh chaos into GOP primary"/>
-
     <TextView
         android:id="@+id/news_3"
         style="@style/NewsStyle"
@@ -116,7 +112,6 @@
         android:drawableLeft="@drawable/news_ap"
         android:drawablePadding="@dimen/icon_margin"
         tools:text="Rancher killed in standoff vowed to die before going to jail"/>
-
     <TextView
         android:id="@+id/news_4"
         style="@style/NewsStyle"
