@@ -11,7 +11,9 @@ import android.widget.TextView;
 import net.maxbraun.mirror.DataUpdater.UpdateListener;
 import net.maxbraun.mirror.Weather.WeatherData;
 
+import java.util.HashSet;
 import java.util.Locale;
+import java.util.Set;
 
 /**
  * A compact version of {@link HomeActivity}.
@@ -19,17 +21,21 @@ import java.util.Locale;
 public class CompactHomeActivity extends Activity {
 
   /**
-   * Available modes for the UI.
+   * Available elements for the UI.
    */
-  private enum UiMode {
-    TIME,
+  private enum UiElement {
     WEATHER,
+    TIME,
+    COMMUTE,
   }
 
   /**
-   * The current mode of the UI.
+   * The set of currently active UI elements.
    */
-  private UiMode uiMode = UiMode.TIME;
+  private Set<UiElement> uiElements = new HashSet<UiElement>() {{
+    add(UiElement.TIME);
+    add(UiElement.COMMUTE);
+  }};
 
   /**
    * The listener used to populate the UI with weather data.
@@ -59,11 +65,41 @@ public class CompactHomeActivity extends Activity {
     }
   };
 
+  /**
+   * The listener used to populate the UI with the commute summary.
+   */
+  private final UpdateListener<Commute.CommuteSummary> commuteUpdateListener =
+      new UpdateListener<Commute.CommuteSummary>() {
+        @Override
+        public void onUpdate(Commute.CommuteSummary summary) {
+          if (summary != null) {
+            commuteTextView.setText(summary.text);
+            commuteTextView.setVisibility(View.VISIBLE);
+            travelModeView.setImageDrawable(summary.travelModeIcon);
+            travelModeView.setVisibility(View.VISIBLE);
+            if (summary.trafficTrendIcon != null) {
+              trafficTrendView.setImageDrawable(summary.trafficTrendIcon);
+              trafficTrendView.setVisibility(View.VISIBLE);
+            } else {
+              trafficTrendView.setVisibility(View.GONE);
+            }
+          } else {
+            commuteTextView.setVisibility(View.GONE);
+            travelModeView.setVisibility(View.GONE);
+            trafficTrendView.setVisibility(View.GONE);
+          }
+        }
+      };
+
   private TextView temperatureView;
   private ImageView iconView;
   private TextClock timeView;
+  private TextView commuteTextView;
+  private ImageView travelModeView;
+  private ImageView trafficTrendView;
 
   private Weather weather;
+  private Commute commute;
   private Util util;
 
   @Override
@@ -71,31 +107,50 @@ public class CompactHomeActivity extends Activity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_home_compact);
 
-    timeView = (TextClock) findViewById(R.id.time);
-    timeView.setVisibility(uiMode == UiMode.TIME ? View.VISIBLE : View.GONE);
-
+    // Weather
     temperatureView = (TextView) findViewById(R.id.temperature);
     iconView = (ImageView) findViewById(R.id.icon);
-    findViewById(R.id.weather).setVisibility(uiMode == UiMode.WEATHER ? View.VISIBLE : View.GONE);
-
-    util = new Util(this);
-    if (uiMode == UiMode.WEATHER) {
+    findViewById(R.id.weather)
+        .setVisibility(uiElements.contains(UiElement.WEATHER) ? View.VISIBLE : View.GONE);
+    if (uiElements.contains(UiElement.WEATHER)) {
       weather = new Weather(this, weatherUpdateListener);
     }
+
+    // Time
+    timeView = (TextClock) findViewById(R.id.time);
+    timeView.setVisibility(uiElements.contains(UiElement.TIME) ? View.VISIBLE : View.GONE);
+
+    // Commute
+    commuteTextView = (TextView) findViewById(R.id.commuteText);
+    travelModeView = (ImageView) findViewById(R.id.travelMode);
+    trafficTrendView = (ImageView) findViewById(R.id.trafficTrend);
+    findViewById(R.id.commute)
+        .setVisibility(uiElements.contains(UiElement.COMMUTE) ? View.VISIBLE : View.GONE);
+    if (uiElements.contains(UiElement.COMMUTE)) {
+      commute = new Commute(this, commuteUpdateListener);
+    }
+
+    util = new Util(this);
   }
 
   @Override
   protected void onStart() {
     super.onStart();
-    if (uiMode == UiMode.WEATHER) {
+    if (uiElements.contains(UiElement.WEATHER)) {
       weather.start();
+    }
+    if (uiElements.contains(UiElement.COMMUTE)) {
+      commute.start();
     }
   }
 
   @Override
   protected void onStop() {
-    if (uiMode == UiMode.WEATHER) {
+    if (uiElements.contains(UiElement.WEATHER)) {
       weather.stop();
+      if (uiElements.contains(UiElement.COMMUTE)) {
+        commute.stop();
+      }
     }
     super.onStop();
   }

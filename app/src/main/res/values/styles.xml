@@ -35,6 +35,10 @@
     <item name="android:singleLine">true</item>
   </style>
 
+  <style name="CommuteTextStyleCompact" parent="CommuteTextStyle">
+    <item name="android:textSize">@dimen/small_text_size_compact</item>
+  </style>
+
   <style name="TimeStyle" parent="BaseTextStyle">
     <item name="android:textSize">@dimen/large_text_size</item>
     <item name="android:fontFamily">sans-serif-thin</item>
