@@ -181,7 +181,7 @@ public class Commute extends DataUpdater<CommuteSummary> {
     }
     String nowDurationText = nowDuration.getString("text");
     long nowDurationSeconds = nowDuration.getLong("value");
-    Log.d(TAG, String.format("Duration now: %s (%s s) %b", nowDurationText,
+    Log.d(TAG, String.format("Duration now: %s (%s secs) %b", nowDurationText,
         nowDurationSeconds, nowHasTraffic));
 
     // Get the duration in the future, with traffic if available.
