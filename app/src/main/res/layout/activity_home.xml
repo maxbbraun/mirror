@@ -101,9 +101,9 @@
         android:layout_height="wrap_content"
         android:layout_gravity="left"
         android:layout_marginBottom="@dimen/news_line_margin"
-        android:drawableLeft="@drawable/nyt"
+        android:drawableLeft="@drawable/news"
         android:drawablePadding="@dimen/icon_margin"
-        tools:text="Egypt Imposes Steep Fuel Price Increases"/>
+        tools:text="U.S. judge sends ex-Trump campaign head Manafort to jail until trial"/>
     <TextView
         android:id="@+id/news_2"
         style="@style/NewsStyle"
@@ -111,9 +111,9 @@
         android:layout_height="wrap_content"
         android:layout_gravity="left"
         android:layout_marginBottom="@dimen/news_line_margin"
-        android:drawableLeft="@drawable/nyt"
+        android:drawableLeft="@drawable/news"
         android:drawablePadding="@dimen/icon_margin"
-        tools:text="How Trump Diverged From Other Presidents and Embraced a Policy of Separating Migrant Families"/>
+        tools:text="Trump sets tariffs on $50 billion in Chinese goods; Beijing strikes back"/>
     <TextView
         android:id="@+id/news_3"
         style="@style/NewsStyle"
@@ -121,9 +121,9 @@
         android:layout_height="wrap_content"
         android:layout_gravity="left"
         android:layout_marginBottom="@dimen/news_line_margin"
-        android:drawableLeft="@drawable/nyt"
+        android:drawableLeft="@drawable/news"
         android:drawablePadding="@dimen/icon_margin"
-        tools:text="China’s Official News Media Sharply Criticize Trump"/>
+        tools:text="Afghanistan Eid car bomb, claimed by Islamic State, kills 26"/>
     <TextView
         android:id="@+id/news_4"
         style="@style/NewsStyle"
@@ -131,9 +131,9 @@
         android:layout_height="wrap_content"
         android:layout_gravity="left"
         android:layout_marginBottom="@dimen/news_line_margin"
-        android:drawableLeft="@drawable/nyt"
+        android:drawableLeft="@drawable/news"
         android:drawablePadding="@dimen/icon_margin"
-        tools:text="FIFA Prepares for a Post-Trump World"/>
+        tools:text="U.S. prosecutors pull encrypted messages from phones seized in Cohen raids"/>
     <TextView
         android:id="@+id/news_5"
         style="@style/NewsStyle"
@@ -141,9 +141,9 @@
         android:layout_height="wrap_content"
         android:layout_gravity="left"
         android:layout_marginBottom="@dimen/news_line_margin"
-        android:drawableLeft="@drawable/nyt"
+        android:drawableLeft="@drawable/news"
         android:drawablePadding="@dimen/icon_margin"
-        tools:text="By Land or by Sea, U.S. Open Golfers Got Creative About Their Lodging"/>
+        tools:text="Trump quip about North Korea's Kim sparks outcry on social media"/>
   </LinearLayout>
 
   <!-- Commute -->

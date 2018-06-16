@@ -20,10 +20,9 @@ public class News extends DataUpdater<List<String>> {
   private static final String TAG = News.class.getSimpleName();
 
   /**
-   * The "Times Wire" RSS feed from the New York Times.
+   * The URL of the "Top News" RSS feed from Reuters.
    */
-  private static final String NYT_RSS_URL =
-      "https://content.api.nytimes.com/svc/news/v3/all/recent.rss";
+  private static final String NEWS_RSS_URL = "http://feeds.reuters.com/reuters/topNews";
 
   /**
    * The time in milliseconds between API calls to update the news.
@@ -49,7 +48,7 @@ public class News extends DataUpdater<List<String>> {
   @Override
   protected List<String> getData() {
     // Get the latest headlines.
-    String response = Network.get(NYT_RSS_URL);
+    String response = Network.get(NEWS_RSS_URL);
     if (response == null) {
       Log.w(TAG, "Empty response.");
       return null;
