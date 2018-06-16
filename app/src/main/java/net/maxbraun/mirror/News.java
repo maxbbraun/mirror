@@ -1,5 +1,6 @@
 package net.maxbraun.mirror;
 
+import android.text.TextUtils;
 import android.util.Log;
 import android.util.Xml;
 
@@ -19,10 +20,10 @@ public class News extends DataUpdater<List<String>> {
   private static final String TAG = News.class.getSimpleName();
 
   /**
-   * The "Top Headlines" news feed from the Associated Press.
+   * The "Times Wire" RSS feed from the New York Times.
    */
-  private static final String AP_TOP_HEADLINES_URL =
-      "http://hosted2.ap.org/atom/APDEFAULT/3d281c11a96b4ad082fe88aa0db04305";
+  private static final String NYT_RSS_URL =
+      "https://content.api.nytimes.com/svc/news/v3/all/recent.rss";
 
   /**
    * The time in milliseconds between API calls to update the news.
@@ -47,8 +48,8 @@ public class News extends DataUpdater<List<String>> {
 
   @Override
   protected List<String> getData() {
-    // Get the latest headlines from the AP news feed.
-    String response = Network.get(AP_TOP_HEADLINES_URL);
+    // Get the latest headlines.
+    String response = Network.get(NYT_RSS_URL);
     if (response == null) {
       Log.w(TAG, "Empty response.");
       return null;
@@ -58,15 +59,30 @@ public class News extends DataUpdater<List<String>> {
     try {
       parser.setInput(new StringReader(response));
       parser.nextTag();
-      parser.require(XmlPullParser.START_TAG, null, "feed");
+      parser.require(XmlPullParser.START_TAG, null, "rss");
       List<String> headlines = new ArrayList<>();
+
+      // Seek to the first channel tag.
       while (parser.next() != XmlPullParser.END_TAG) {
         if (parser.getEventType() != XmlPullParser.START_TAG) {
           continue;
         }
-        if (parser.getName().equals("entry")) {
-          String title = readEntryTitle();
-          if (title != null) {
+        if (parser.getName().equals("channel")) {
+          break;
+        } else {
+          skipTags();
+        }
+      }
+
+      // Find each item tag and read the title tag within.
+      while (parser.next() != XmlPullParser.END_TAG) {
+        if (parser.getEventType() != XmlPullParser.START_TAG) {
+          continue;
+        }
+        if (parser.getName().equals("item")) {
+          String title = readItemTitle();
+          if (!TextUtils.isEmpty(title)) {
+            Log.d(TAG, "Headline: " + title);
             headlines.add(title);
           }
         } else {
@@ -75,17 +91,17 @@ public class News extends DataUpdater<List<String>> {
       }
       return headlines;
     } catch (IOException | XmlPullParserException e) {
-      Log.e(TAG, "Parsing news XML response failed: " + response, e);
+      Log.e(TAG, "Parsing news XML response failed.", e);
       return null;
     }
   }
 
   /**
-   * Reads the contents of a {@code <title>} tag within an {@code <entry} tag at the current parser
+   * Reads the contents of a {@code <title>} tag within an {@code <item>} tag at the current parser
    * position.
    */
-  private String readEntryTitle() throws IOException, XmlPullParserException {
-    parser.require(XmlPullParser.START_TAG, null, "entry");
+  private String readItemTitle() throws IOException, XmlPullParserException {
+    parser.require(XmlPullParser.START_TAG, null, "item");
 
     String title = null;
     while (parser.next() != XmlPullParser.END_TAG) {

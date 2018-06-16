@@ -2,7 +2,6 @@ package net.maxbraun.mirror;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageView;
@@ -30,6 +29,7 @@ public class HomeActivity extends Activity {
       R.id.news_2,
       R.id.news_3,
       R.id.news_4,
+      R.id.news_5,
   };
 
   /**
