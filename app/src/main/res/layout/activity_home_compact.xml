@@ -85,5 +85,17 @@
             tools:text="39 mins via US-101"/>
       </LinearLayout>
     </FrameLayout>
+
+    <!-- Body -->
+    <net.maxbraun.mirror.BodyView
+        xmlns:body="http://schemas.android.com/apk/res/net.maxbraun.mirror"
+        android:id="@+id/body"
+        body:lineWidth="@dimen/body_line_width_compact"
+        body:labelMargin="@dimen/body_label_margin_compact"
+        body:dotRadius="@dimen/body_dot_radius_compact"
+        android:layout_width="800dp"
+        android:layout_height="400dp"
+        android:layout_gravity="center_horizontal"
+        body:textSize="@dimen/small_text_size_compact"/>
   </LinearLayout>
 </RelativeLayout>

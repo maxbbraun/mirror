@@ -16,6 +16,9 @@
   <dimen name="large_text_size">100dp</dimen>
   <dimen name="large_text_size_compact">200dp</dimen>
   <dimen name="body_dot_radius">3dp</dimen>
+  <dimen name="body_dot_radius_compact">6dp</dimen>
   <dimen name="body_line_width">2dp</dimen>
+  <dimen name="body_line_width_compact">4dp</dimen>
   <dimen name="body_label_margin">6dp</dimen>
+  <dimen name="body_label_margin_compact">12dp</dimen>
 </resources>

@@ -27,6 +27,7 @@ public class CompactHomeActivity extends Activity {
     WEATHER,
     TIME,
     COMMUTE,
+    BODY,
   }
 
   /**
@@ -91,15 +92,33 @@ public class CompactHomeActivity extends Activity {
         }
       };
 
+  /**
+   * The listener used to populate the UI with body measurements.
+   */
+  private final UpdateListener<Body.BodyMeasure[]> bodyUpdateListener =
+      new UpdateListener<Body.BodyMeasure[]>() {
+        @Override
+        public void onUpdate(Body.BodyMeasure[] bodyMeasures) {
+          if (bodyMeasures != null) {
+            bodyView.setBodyMeasures(bodyMeasures);
+            bodyView.setVisibility(View.VISIBLE);
+          } else {
+            bodyView.setVisibility(View.GONE);
+          }
+        }
+      };
+
   private TextView temperatureView;
   private ImageView iconView;
   private TextClock timeView;
   private TextView commuteTextView;
   private ImageView travelModeView;
   private ImageView trafficTrendView;
+  private BodyView bodyView;
 
   private Weather weather;
   private Commute commute;
+  private Body body;
   private Util util;
 
   @Override
@@ -130,6 +149,13 @@ public class CompactHomeActivity extends Activity {
       commute = new Commute(this, commuteUpdateListener);
     }
 
+    // Body
+    bodyView = (BodyView) findViewById(R.id.body);
+    bodyView.setVisibility(uiElements.contains(UiElement.BODY) ? View.VISIBLE : View.GONE);
+    if (uiElements.contains(UiElement.BODY)) {
+      body = new Body(this, bodyUpdateListener);
+    }
+
     util = new Util(this);
   }
 
@@ -142,15 +168,21 @@ public class CompactHomeActivity extends Activity {
     if (uiElements.contains(UiElement.COMMUTE)) {
       commute.start();
     }
+    if (uiElements.contains(UiElement.BODY)) {
+      body.start();
+    }
   }
 
   @Override
   protected void onStop() {
     if (uiElements.contains(UiElement.WEATHER)) {
       weather.stop();
-      if (uiElements.contains(UiElement.COMMUTE)) {
-        commute.stop();
-      }
+    }
+    if (uiElements.contains(UiElement.COMMUTE)) {
+      commute.stop();
+    }
+    if (uiElements.contains(UiElement.BODY)) {
+      body.stop();
     }
     super.onStop();
   }

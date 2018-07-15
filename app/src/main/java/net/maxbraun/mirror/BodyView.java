@@ -2,6 +2,7 @@ package net.maxbraun.mirror;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -118,7 +119,23 @@ public class BodyView extends View {
     super(context, attrs, defStyleAttr, defStyleRes);
     final Resources resources = context.getResources();
 
-    dotRadiusPixels = getResources().getDimension(R.dimen.body_dot_radius);
+    // Read the custom attributes from the layout.
+    final TypedArray attributes = context.getTheme().obtainStyledAttributes(attrs,
+        R.styleable.BodyView, defStyleAttr, defStyleRes);
+    float lineWidthValue;
+    float textSizeValue;
+    try {
+      dotRadiusPixels = attributes.getDimension(R.styleable.BodyView_dotRadius,
+          resources.getDimension(R.dimen.body_dot_radius));
+      lineWidthValue = attributes.getDimension(R.styleable.BodyView_lineWidth,
+          resources.getDimension(R.dimen.body_line_width));
+      textSizeValue = attributes.getDimension(R.styleable.BodyView_textSize,
+          resources.getDimension(R.dimen.small_text_size));
+      labelMarginPixels = attributes.getDimension(R.styleable.BodyView_labelMargin,
+          resources.getDimension(R.dimen.body_label_margin));
+    } finally {
+      attributes.recycle();
+    }
 
     whiteDotPaint = new Paint() {{
       setColor(Color.WHITE);
@@ -138,7 +155,7 @@ public class BodyView extends View {
       setStyle(Style.FILL);
     }};
 
-    final float lineWidthPixels = getResources().getDimension(R.dimen.body_line_width);
+    final float lineWidthPixels = lineWidthValue;
     linePaint = new Paint() {{
       setColor(Color.WHITE);
       setAntiAlias(true);
@@ -148,15 +165,13 @@ public class BodyView extends View {
       setStrokeJoin(Join.ROUND);
     }};
 
-    final float textSize = getResources().getDimension(R.dimen.small_text_size);
+    final float textSize = textSizeValue;
     labelPaint = new Paint() {{
       setColor(Color.WHITE);
       setAntiAlias(true);
       setTextSize(textSize);
       setTypeface(Typeface.create("sans-serif-light", Typeface.NORMAL));
     }};
-
-    labelMarginPixels = getResources().getDimension(R.dimen.body_label_margin);
   }
 
   /**

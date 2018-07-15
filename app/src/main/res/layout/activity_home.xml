@@ -77,7 +77,11 @@
 
   <!-- Body -->
   <net.maxbraun.mirror.BodyView
+      xmlns:body="http://schemas.android.com/apk/res/net.maxbraun.mirror"
       android:id="@+id/body"
+      body:lineWidth="@dimen/body_line_width"
+      body:labelMargin="@dimen/body_label_margin"
+      body:dotRadius="@dimen/body_dot_radius"
       android:layout_width="220dp"
       android:layout_height="180dp"
       android:layout_alignParentRight="true"
