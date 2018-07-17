@@ -1,16 +1,13 @@
 package net.maxbraun.mirror;
 
-import com.github.scribejava.core.builder.api.DefaultApi10a;
-import com.github.scribejava.core.builder.api.OAuth1SignatureType;
-import com.github.scribejava.core.model.OAuth1RequestToken;
-import com.github.scribejava.core.model.Verb;
+import com.github.scribejava.core.builder.api.ClientAuthenticationType;
+import com.github.scribejava.core.builder.api.DefaultApi20;
+import com.github.scribejava.core.builder.api.OAuth2SignatureType;
 
 /**
- * An OAuth 1.0 API spec for the Nokia Health API.
+ * An OAuth 2.0 API spec for the Nokia Health API.
  */
-public class NokiaHealthApi extends DefaultApi10a {
-  private static final String BASE_URL = "https://developer.health.nokia.com/account";
-
+public class NokiaHealthApi extends DefaultApi20 {
   private NokiaHealthApi() {
   }
 
@@ -23,32 +20,27 @@ public class NokiaHealthApi extends DefaultApi10a {
   }
 
   @Override
-  public String getRequestTokenEndpoint() {
-    return BASE_URL + "/request_token";
-  }
-
-  @Override
   public String getAccessTokenEndpoint() {
-    return BASE_URL + "/access_token";
+    return "https://account.health.nokia.com/oauth2/token?grant_type=authorization_code";
   }
 
   @Override
-  public String getAuthorizationUrl(OAuth1RequestToken requestToken) {
-    return String.format("%s/authorize?oauth_token=%s", BASE_URL, requestToken.getToken());
+  public String getRefreshTokenEndpoint() {
+    return "https://account.health.nokia.com/oauth2/token?grant_type=refresh_token";
   }
 
   @Override
-  public OAuth1SignatureType getSignatureType() {
-    return OAuth1SignatureType.QueryString;
+  protected String getAuthorizationBaseUrl() {
+    return "https://account.health.nokia.com/oauth2_user/authorize2";
   }
 
   @Override
-  public Verb getAccessTokenVerb() {
-    return Verb.GET;
+  public OAuth2SignatureType getSignatureType() {
+    return OAuth2SignatureType.BEARER_URI_QUERY_PARAMETER;
   }
 
   @Override
-  public Verb getRequestTokenVerb() {
-    return Verb.GET;
+  public ClientAuthenticationType getClientAuthenticationType() {
+    return ClientAuthenticationType.REQUEST_BODY;
   }
 }

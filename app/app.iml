@@ -98,7 +98,6 @@
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/instant-run-resources" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/javaPrecompile" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/jniLibs" />
-      <excludeFolder url="file://$MODULE_DIR$/build/intermediates/lint" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/manifest-checker" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/manifests" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/prebuild" />
@@ -119,8 +118,8 @@
     <orderEntry type="library" name="Gradle: com.android.support:support-v4-23.4.0" level="project" />
     <orderEntry type="library" name="Gradle: com.android.support:support-annotations:23.4.0@jar" level="project" />
     <orderEntry type="library" name="Gradle: com.android.support:recyclerview-v7-23.4.0" level="project" />
-    <orderEntry type="library" name="Gradle: com.github.scribejava:scribejava-core:5.2.0-java7again@jar" level="project" />
+    <orderEntry type="library" name="Gradle: com.github.scribejava:scribejava-apis:5.5.0@jar" level="project" />
+    <orderEntry type="library" name="Gradle: com.github.scribejava:scribejava-core:5.5.0@jar" level="project" />
     <orderEntry type="library" name="Gradle: com.android.support:leanback-v17-23.4.0" level="project" />
-    <orderEntry type="library" name="Gradle: com.github.scribejava:scribejava-apis:5.2.0-java7again@jar" level="project" />
   </component>
 </module>

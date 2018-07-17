@@ -1,5 +1,6 @@
 package net.maxbraun.mirror;
 
+import android.app.Activity;
 import android.content.Context;
 import android.util.Log;
 
@@ -29,32 +30,38 @@ public class Body extends DataUpdater<BodyMeasure[]> {
   private static final long UPDATE_INTERVAL_MILLIS = TimeUnit.MINUTES.toMillis(5);
 
   /**
-   * The context used to load string resources.
+   * The activity used to load string resources and access shared preferences.
    */
-  private final Context context;
+  private final Activity activity;
 
   /**
-   * The OAuth 1.0 keys for the Nokia Health API.
+   * The OAuth keys for the Nokia Health API.
    */
-  private final Network.OAuth1KeyProvider nokiaHealthApiKeys = new Network.OAuth1KeyProvider() {
+  private final Network.OAuthDataProvider nokiaHealthApiData = new Network.OAuthDataProvider() {
     @Override
-    public String getApiKey() {
-      return context.getString(R.string.nokia_health_consumer_key);
+    public String getClientId() {
+      return activity.getString(R.string.nokia_health_client_id);
     }
 
     @Override
-    public String getApiSecret() {
-      return context.getString(R.string.nokia_health_consumer_secret);
+    public String getClientSecret() {
+      return activity.getString(R.string.nokia_health_client_secret);
     }
 
     @Override
-    public String getAccessToken() {
-      return context.getString(R.string.nokia_health_request_token_key);
+    public String getRefreshToken() {
+      return activity.getString(R.string.nokia_health_refresh_token);
     }
 
     @Override
-    public String getAccessTokenSecret() {
-      return context.getString(R.string.nokia_health_request_token_secret);
+    public String getServiceId() {
+      return "nokia_health_api";
+    }
+
+    @Override
+    public String getInvalidTokenResponse() {
+      return "{\"status\":401,\"error\":\"XRequestID: Not provided invalid_token: The access token "
+          + "provided is invalid\"}";
     }
   };
 
@@ -79,9 +86,9 @@ public class Body extends DataUpdater<BodyMeasure[]> {
     }
   }
 
-  public Body(Context context, UpdateListener<BodyMeasure[]> updateListener) {
+  public Body(Activity activity, UpdateListener<BodyMeasure[]> updateListener) {
     super(updateListener, UPDATE_INTERVAL_MILLIS);
-    this.context = context;
+    this.activity = activity;
   }
 
   @Override
@@ -91,8 +98,8 @@ public class Body extends DataUpdater<BodyMeasure[]> {
 
     // Parse the data we are interested in from the response JSON.
     try {
-      JSONObject response = Network.getJson(requestUrl, NokiaHealthApi.instance(),
-          nokiaHealthApiKeys);
+      JSONObject response = Network.getJson(activity, requestUrl, NokiaHealthApi.instance(),
+          nokiaHealthApiData);
       if (response != null) {
         return parseBodyMeasures(response);
       } else {
@@ -159,11 +166,9 @@ public class Body extends DataUpdater<BodyMeasure[]> {
    * Creates the URL for a Nokia Health API request based on the current time.
    */
   private String getRequestUrl() {
-    return String.format(Locale.US,"http://api.health.nokia.com/measure" +
+    return String.format(Locale.US, "https://api.health.nokia.com/measure" +
         "?action=getmeas" +
-        "&userid=%s" +
         "&startdate=%d",
-        context.getString(R.string.nokia_health_user_id),
         getStartTimestamp());
   }
 
