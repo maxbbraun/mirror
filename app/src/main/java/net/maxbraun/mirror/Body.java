@@ -57,12 +57,6 @@ public class Body extends DataUpdater<BodyMeasure[]> {
     public String getServiceId() {
       return "nokia_health_api";
     }
-
-    @Override
-    public String getInvalidTokenResponse() {
-      return "{\"status\":401,\"error\":\"XRequestID: Not provided invalid_token: The access token "
-          + "provided is invalid\"}";
-    }
   };
 
   /**
