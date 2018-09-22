@@ -25,7 +25,7 @@ public class Commute extends DataUpdater<CommuteSummary> {
   /**
    * The time in milliseconds between API calls to update the commute time.
    */
-  private static final long UPDATE_INTERVAL_MILLIS = TimeUnit.MINUTES.toMillis(2);
+  private static final long UPDATE_INTERVAL_MILLIS = TimeUnit.MINUTES.toMillis(15);
 
   /**
    * The time in milliseconds from now which is used as the future traffic reference point.
