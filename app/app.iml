@@ -130,12 +130,12 @@
     <orderEntry type="library" name="Gradle: android.arch.lifecycle:common:1.0.0@jar" level="project" />
     <orderEntry type="library" name="Gradle: com.android.support:support-core-ui-26.1.0" level="project" />
     <orderEntry type="library" name="Gradle: com.google.firebase:firebase-common-16.0.4" level="project" />
+    <orderEntry type="library" name="Gradle: com.github.scribejava:scribejava-apis:6.2.0@jar" level="project" />
+    <orderEntry type="library" name="Gradle: com.github.scribejava:scribejava-core:6.2.0@jar" level="project" />
     <orderEntry type="library" name="Gradle: com.android.support:support-core-utils-26.1.0" level="project" />
     <orderEntry type="library" name="Gradle: com.android.support:support-fragment-26.1.0" level="project" />
     <orderEntry type="library" name="Gradle: android.arch.core:common:1.0.0@jar" level="project" />
     <orderEntry type="library" name="Gradle: com.google.android.gms:play-services-basement-16.0.1" level="project" />
-    <orderEntry type="library" name="Gradle: com.github.scribejava:scribejava-apis:5.5.0@jar" level="project" />
-    <orderEntry type="library" name="Gradle: com.github.scribejava:scribejava-core:5.5.0@jar" level="project" />
     <orderEntry type="library" name="Gradle: com.android.support:support-media-compat-26.1.0" level="project" />
     <orderEntry type="library" name="Gradle: com.google.firebase:firebase-database-16.0.5" level="project" />
     <orderEntry type="library" name="Gradle: com.android.support:support-annotations:26.1.0@jar" level="project" />

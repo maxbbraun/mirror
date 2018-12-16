@@ -23,7 +23,7 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation 'com.github.scribejava:scribejava-apis:5.5.0'
+    implementation 'com.github.scribejava:scribejava-apis:6.2.0'
     implementation 'com.google.firebase:firebase-database:16.0.5'
 }
 

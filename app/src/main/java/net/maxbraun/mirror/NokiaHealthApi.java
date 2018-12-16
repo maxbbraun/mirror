@@ -1,8 +1,10 @@
 package net.maxbraun.mirror;
 
-import com.github.scribejava.core.builder.api.ClientAuthenticationType;
 import com.github.scribejava.core.builder.api.DefaultApi20;
-import com.github.scribejava.core.builder.api.OAuth2SignatureType;
+import com.github.scribejava.core.oauth2.bearersignature.BearerSignature;
+import com.github.scribejava.core.oauth2.bearersignature.BearerSignatureURIQueryParameter;
+import com.github.scribejava.core.oauth2.clientauthentication.ClientAuthentication;
+import com.github.scribejava.core.oauth2.clientauthentication.RequestBodyAuthenticationScheme;
 
 /**
  * An OAuth 2.0 API spec for the Nokia Health API.
@@ -35,12 +37,12 @@ public class NokiaHealthApi extends DefaultApi20 {
   }
 
   @Override
-  public OAuth2SignatureType getSignatureType() {
-    return OAuth2SignatureType.BEARER_URI_QUERY_PARAMETER;
+  public BearerSignature getBearerSignature() {
+    return BearerSignatureURIQueryParameter.instance();
   }
 
   @Override
-  public ClientAuthenticationType getClientAuthenticationType() {
-    return ClientAuthenticationType.REQUEST_BODY;
+  public ClientAuthentication getClientAuthentication() {
+    return RequestBodyAuthenticationScheme.instance();
   }
 }
