@@ -2,41 +2,55 @@ package net.maxbraun.mirror;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextClock;
 import android.widget.TextView;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 import net.maxbraun.mirror.DataUpdater.UpdateListener;
 import net.maxbraun.mirror.Weather.WeatherData;
 
-import java.util.HashSet;
 import java.util.Locale;
-import java.util.Set;
 
 /**
  * A compact version of {@link HomeActivity}.
  */
 public class CompactHomeActivity extends Activity {
+  private static final String TAG = CompactHomeActivity.class.getSimpleName();
 
   /**
-   * Available elements for the UI.
+   * The path to the Firebase Database for the UI settings.
    */
-  private enum UiElement {
-    WEATHER,
-    TIME,
-    COMMUTE,
-    BODY,
-  }
+  private static final String UI_SETTINGS_PATH = "compact_ui_settings";
 
   /**
-   * The set of currently active UI elements.
+   * The child path under {@link #UI_SETTINGS_PATH} for the weather boolean.
    */
-  private Set<UiElement> uiElements = new HashSet<UiElement>() {{
-    add(UiElement.TIME);
-    add(UiElement.COMMUTE);
-  }};
+  private static final String UI_SETTING_WEATHER = "weather";
+
+  /**
+   * The child path under {@link #UI_SETTINGS_PATH} for the time boolean.
+   */
+  private static final String UI_SETTING_TIME = "time";
+
+  /**
+   * The child path under {@link #UI_SETTINGS_PATH} for the commute boolean.
+   */
+  private static final String UI_SETTING_COMMUTE = "commute";
+
+  /**
+   * The child path under {@link #UI_SETTINGS_PATH} for the body boolean.
+   */
+  private static final String UI_SETTING_BODY = "body";
 
   /**
    * The listener used to populate the UI with weather data.
@@ -108,9 +122,52 @@ public class CompactHomeActivity extends Activity {
         }
       };
 
+  /**
+   * The listener for Firebase Database UI settings updates.
+   */
+  private ValueEventListener uiSettingsListener = new ValueEventListener() {
+    @Override
+    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+      Boolean weatherSetting = dataSnapshot.child(UI_SETTING_WEATHER).getValue(Boolean.class);
+      if (weatherSetting != null && weatherSetting) {
+        showWeather();
+      } else {
+        hideWeather();
+      }
+
+      Boolean timeSetting = dataSnapshot.child(UI_SETTING_TIME).getValue(Boolean.class);
+      if (timeSetting != null && timeSetting) {
+        showTime();
+      } else {
+        hideTime();
+      }
+
+      Boolean commuteSetting = dataSnapshot.child(UI_SETTING_COMMUTE).getValue(Boolean.class);
+      if (commuteSetting != null && commuteSetting) {
+        showCommute();
+      } else {
+        hideCommute();
+      }
+
+      Boolean bodySetting = dataSnapshot.child(UI_SETTING_BODY).getValue(Boolean.class);
+      if (bodySetting != null && bodySetting) {
+        showBody();
+      } else {
+        hideBody();
+      }
+    }
+
+    @Override
+    public void onCancelled(@NonNull DatabaseError databaseError) {
+      Log.e(TAG, "Failed to load UI settings.", databaseError.toException());
+    }
+  };
+
+  private View weatherView;
   private TextView temperatureView;
   private ImageView iconView;
   private TextClock timeView;
+  private View commuteView;
   private TextView commuteTextView;
   private ImageView travelModeView;
   private ImageView trafficTrendView;
@@ -120,6 +177,7 @@ public class CompactHomeActivity extends Activity {
   private Commute commute;
   private Body body;
   private Util util;
+  private DatabaseReference uiSettings;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -127,63 +185,42 @@ public class CompactHomeActivity extends Activity {
     setContentView(R.layout.activity_home_compact);
 
     // Weather
-    temperatureView = (TextView) findViewById(R.id.temperature);
-    iconView = (ImageView) findViewById(R.id.icon);
-    findViewById(R.id.weather)
-        .setVisibility(uiElements.contains(UiElement.WEATHER) ? View.VISIBLE : View.GONE);
-    if (uiElements.contains(UiElement.WEATHER)) {
-      weather = new Weather(this, weatherUpdateListener);
-    }
+    weatherView = findViewById(R.id.weather);
+    temperatureView = findViewById(R.id.temperature);
+    iconView = findViewById(R.id.icon);
 
     // Time
-    timeView = (TextClock) findViewById(R.id.time);
-    timeView.setVisibility(uiElements.contains(UiElement.TIME) ? View.VISIBLE : View.GONE);
+    timeView = findViewById(R.id.time);
 
     // Commute
-    commuteTextView = (TextView) findViewById(R.id.commuteText);
-    travelModeView = (ImageView) findViewById(R.id.travelMode);
-    trafficTrendView = (ImageView) findViewById(R.id.trafficTrend);
-    findViewById(R.id.commute)
-        .setVisibility(uiElements.contains(UiElement.COMMUTE) ? View.VISIBLE : View.GONE);
-    if (uiElements.contains(UiElement.COMMUTE)) {
-      commute = new Commute(this, commuteUpdateListener);
-    }
+    commuteView = findViewById(R.id.commute);
+    commuteTextView = findViewById(R.id.commuteText);
+    travelModeView = findViewById(R.id.travelMode);
+    trafficTrendView = findViewById(R.id.trafficTrend);
 
     // Body
-    bodyView = (BodyView) findViewById(R.id.body);
-    bodyView.setVisibility(uiElements.contains(UiElement.BODY) ? View.VISIBLE : View.GONE);
-    if (uiElements.contains(UiElement.BODY)) {
-      body = new Body(this, bodyUpdateListener);
-    }
+    bodyView = findViewById(R.id.body);
 
     util = new Util(this);
+    uiSettings = FirebaseDatabase.getInstance().getReference(UI_SETTINGS_PATH);
   }
 
   @Override
   protected void onStart() {
     super.onStart();
-    if (uiElements.contains(UiElement.WEATHER)) {
-      weather.start();
-    }
-    if (uiElements.contains(UiElement.COMMUTE)) {
-      commute.start();
-    }
-    if (uiElements.contains(UiElement.BODY)) {
-      body.start();
-    }
+
+    // The listener will show the enabled UI elements.
+    uiSettings.addValueEventListener(uiSettingsListener);
   }
 
   @Override
   protected void onStop() {
-    if (uiElements.contains(UiElement.WEATHER)) {
-      weather.stop();
-    }
-    if (uiElements.contains(UiElement.COMMUTE)) {
-      commute.stop();
-    }
-    if (uiElements.contains(UiElement.BODY)) {
-      body.stop();
-    }
+    uiSettings.removeEventListener(uiSettingsListener);
+
+    hideWeather();
+    hideCommute();
+    hideBody();
+
     super.onStop();
   }
 
@@ -196,5 +233,85 @@ public class CompactHomeActivity extends Activity {
   @Override
   public boolean onKeyUp(int keyCode, KeyEvent event) {
     return util.onKeyUp(keyCode, event);
+  }
+
+  /**
+   * Shows the weather UI and starts regular updates.
+   */
+  private void showWeather() {
+    if (weather == null) {
+      weather = new Weather(CompactHomeActivity.this, weatherUpdateListener);
+      weather.start();
+    }
+    weatherView.setVisibility(View.VISIBLE);
+  }
+
+  /**
+   * Hides the weather UI and stops regular updates.
+   */
+  private void hideWeather() {
+    if (weather != null) {
+      weather.stop();
+      weather = null;
+    }
+    weatherView.setVisibility(View.GONE);
+  }
+
+  /**
+   * Shows the time UI.
+   */
+  private void showTime() {
+    timeView.setVisibility(View.VISIBLE);
+  }
+
+  /**
+   * Hides the time UI.
+   */
+  private void hideTime() {
+    timeView.setVisibility(View.GONE);
+  }
+
+  /**
+   * Shows the commute UI and starts regular updates.
+   */
+  private void showCommute() {
+    if (commute == null) {
+      commute = new Commute(CompactHomeActivity.this, commuteUpdateListener);
+      commute.start();
+    }
+    commuteView.setVisibility(View.VISIBLE);
+  }
+
+  /**
+   * Hides the commute UI and stops regular updates.
+   */
+  private void hideCommute() {
+    if (commute != null) {
+      commute.stop();
+      commute = null;
+    }
+    commuteView.setVisibility(View.GONE);
+  }
+
+  /**
+   * Shows the body UI and starts regular updates.
+   */
+  private void showBody() {
+    if (body == null) {
+      body = new Body(CompactHomeActivity.this, bodyUpdateListener);
+      body.start();
+    }
+    bodyView.setVisibility(View.VISIBLE);
+  }
+
+  /**
+   * Hides the body UI and stops regular updates.
+   */
+  private void hideBody() {
+    if (body != null) {
+      body.stop();
+      body = null;
+    }
+    bodyView.setVisibility(View.GONE);
   }
 }

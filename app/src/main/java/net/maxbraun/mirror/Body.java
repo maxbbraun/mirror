@@ -1,13 +1,11 @@
 package net.maxbraun.mirror;
 
 import android.app.Activity;
-import android.content.Context;
 import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
@@ -146,12 +144,8 @@ public class Body extends DataUpdater<BodyMeasure[]> {
     }
 
     // Make sure the measures are sorted by ascending timestamp.
-    Collections.sort(bodyMeasures, new Comparator<BodyMeasure>() {
-      @Override
-      public int compare(BodyMeasure lhs, BodyMeasure rhs) {
-        return Long.compare(lhs.timestamp, rhs.timestamp);
-      }
-    });
+    Collections.sort(bodyMeasures,
+        (BodyMeasure lhs, BodyMeasure rhs) -> Long.compare(lhs.timestamp, rhs.timestamp));
 
     return bodyMeasures.toArray(new BodyMeasure[bodyMeasures.size()]);
   }

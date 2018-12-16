@@ -14,7 +14,6 @@ import android.widget.Toast;
  * Utility methods.
  */
 public class Util {
-
   private final Context context;
 
   public Util(Context context) {
@@ -40,9 +39,9 @@ public class Util {
    * Shows a {@link Toast} with the IPv4 address of the Wifi connection. Useful for debugging,
    * especially when using adb over Wifi.
    */
-  @SuppressWarnings("deprecation")
   public void showIpAddress() {
-    WifiManager wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+    Context appContext = context.getApplicationContext();
+    WifiManager wifiManager = (WifiManager) appContext.getSystemService(Context.WIFI_SERVICE);
     WifiInfo wifiInfo = wifiManager.getConnectionInfo();
     String ipAddress = null;
     if (wifiInfo != null) {

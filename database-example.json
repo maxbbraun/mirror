@@ -1,0 +1,13 @@
+{
+  "commute_settings" : {
+    "home" : "Las Vegas Convention Center, 3150 Paradise Rd, Las Vegas, NV 89109",
+    "travel_mode" : "driving",
+    "work" : "McCarran International Airport, 5757 Wayne Newton Blvd, Las Vegas, NV 89119"
+  },
+  "compact_ui_settings" : {
+    "body" : false,
+    "commute" : true,
+    "time" : false,
+    "weather" : true
+  }
+}

@@ -2,8 +2,16 @@ package net.maxbraun.mirror;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.Log;
+
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -63,9 +71,68 @@ public class Commute extends DataUpdater<CommuteSummary> {
   private static final String URL_ENCODE_FORMAT = "UTF-8";
 
   /**
-   * The context used to load string resources.
+   * The path to the Firebase Database for the commute settings.
+   */
+  private static final String COMMUTE_SETTINGS_PATH = "commute_settings";
+
+  /**
+   * The child path under {@link #COMMUTE_SETTINGS_PATH} for the home address string.
+   */
+  private static final String COMMUTE_SETTING_HOME= "home";
+
+  /**
+   * The child path under {@link #COMMUTE_SETTINGS_PATH} for the work address string.
+   */
+  private static final String COMMUTE_SETTING_WORK = "work";
+
+  /**
+   * The child path under {@link #COMMUTE_SETTINGS_PATH} for the travel mode string.
+   * Valid options: https://developers.google.com/maps/documentation/directions/intro#TravelModes
+   */
+  private static final String COMMUTE_SETTING_TRAVEL_MODE = "travel_mode";
+
+  /**
+   * The context used to load string and drawable resources.
    */
   private final Context context;
+
+  /**
+   * A reference to the Firebase Database with the commute settings.
+   */
+  private final DatabaseReference commuteSettings;
+
+  /**
+   * The most recent home address.
+   */
+  private @Nullable String home;
+
+  /**
+   * The most recent work address.
+   */
+  private @Nullable String work;
+
+  /**
+   * The most recent travel mode.
+   */
+  private @Nullable String travelMode;
+
+  /**
+   * The listener for Firebase Database commute settings updates.
+   */
+  private ValueEventListener commuteSettingsListener = new ValueEventListener() {
+    @Override
+    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+      home = dataSnapshot.child(COMMUTE_SETTING_HOME).getValue(String.class);
+      work = dataSnapshot.child(COMMUTE_SETTING_WORK).getValue(String.class);
+      travelMode = dataSnapshot.child(COMMUTE_SETTING_TRAVEL_MODE).getValue(String.class);
+      updateNow();
+    }
+
+    @Override
+    public void onCancelled(@NonNull DatabaseError databaseError) {
+      Log.e(TAG, "Failed to load commute settings.", databaseError.toException());
+    }
+  };
 
   /**
    * A summary of current commute data.
@@ -97,6 +164,7 @@ public class Commute extends DataUpdater<CommuteSummary> {
   public Commute(Context context, UpdateListener<CommuteSummary> updateListener) {
     super(updateListener, UPDATE_INTERVAL_MILLIS);
     this.context = context;
+    commuteSettings = FirebaseDatabase.getInstance().getReference(COMMUTE_SETTINGS_PATH);
   }
 
   @Override
@@ -123,11 +191,28 @@ public class Commute extends DataUpdater<CommuteSummary> {
     }
   }
 
+  @Override
+  public void start() {
+    super.start();
+    commuteSettings.addValueEventListener(commuteSettingsListener);
+  }
+
+  @Override
+  public void stop() {
+    commuteSettings.removeEventListener(commuteSettingsListener);
+    super.stop();
+  }
+
   /**
    * Creates the URL for a Google Maps Directions API request based on origin and destination
    * addresses from resources.
    */
   private String getRequestUrl(long departureTimeMillis) {
+    if (home == null || work == null || travelMode == null) {
+      Log.w(TAG, "Missing home, work, or travel mode.");
+      return null;
+    }
+
     try {
       return String.format(Locale.US, "https://maps.googleapis.com/maps/api/directions/json" +
               "?origin=%s" +
@@ -135,9 +220,9 @@ public class Commute extends DataUpdater<CommuteSummary> {
               "&mode=%s" +
               "&departure_time=%d" +
               "&key=%s",
-          URLEncoder.encode(context.getString(R.string.home), URL_ENCODE_FORMAT),
-          URLEncoder.encode(context.getString(R.string.work), URL_ENCODE_FORMAT),
-          context.getString(R.string.travel_mode),
+          URLEncoder.encode(home, URL_ENCODE_FORMAT),
+          URLEncoder.encode(work, URL_ENCODE_FORMAT),
+          travelMode,
           departureTimeMillis / 1000,
           context.getString(R.string.google_maps_directions_api_key));
     } catch (UnsupportedEncodingException e) {
@@ -152,6 +237,11 @@ public class Commute extends DataUpdater<CommuteSummary> {
    */
   private CommuteSummary parseCommuteSummary(JSONObject nowResponse, JSONObject futureResponse)
       throws JSONException {
+    if (travelMode == null) {
+      Log.w(TAG, "Missing travel mode.");
+      return null;
+    }
+
     String nowStatus = nowResponse.getString("status");
     String futureStatus = futureResponse.getString("status");
     if (!"OK".equals(nowStatus) || !"OK".equals(futureStatus)) {
@@ -208,7 +298,6 @@ public class Commute extends DataUpdater<CommuteSummary> {
     }
 
     // Pick the icon for the travel mode.
-    String travelMode = context.getString(R.string.travel_mode);
     int travelModeIconResource;
     if (MODE_DRIVING.equals(travelMode)) {
       travelModeIconResource = R.drawable.driving;

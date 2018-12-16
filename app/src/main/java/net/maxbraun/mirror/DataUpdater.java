@@ -75,12 +75,8 @@ public abstract class DataUpdater<Data> {
     Log.d(getTag(), "Starting.");
 
     // Remember the task so we can cancel it later.
-    updateTask = scheduledBackgroundExecutor.scheduleAtFixedRate(new Runnable() {
-      @Override
-      public void run() {
-        update();
-      }
-    }, 0, updateIntervalMillis, TimeUnit.MILLISECONDS);
+    updateTask = scheduledBackgroundExecutor.scheduleAtFixedRate(() -> update(),
+        0, updateIntervalMillis, TimeUnit.MILLISECONDS);
   }
 
   /**
@@ -103,13 +99,17 @@ public abstract class DataUpdater<Data> {
     Log.d(getTag(), "Updating...");
 
     final Data data = getData();
-    mainHandler.post(new Runnable() {
-      @Override
-      public void run() {
-        updateListener.onUpdate(data);
-      }
-    });
+    mainHandler.post(() -> updateListener.onUpdate(data));
     Log.d(getTag(), "Updated.");
+  }
+
+  /**
+   * Triggers an off-schedule update now without altering the schedule.
+   */
+  public void updateNow() {
+    Log.d(getTag(), "Off-schedule update.");
+
+    scheduledBackgroundExecutor.execute(() -> update());
   }
 
   /**
