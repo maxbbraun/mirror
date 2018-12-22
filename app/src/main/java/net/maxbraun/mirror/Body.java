@@ -144,8 +144,7 @@ public class Body extends DataUpdater<BodyMeasure[]> {
     }
 
     // Make sure the measures are sorted by ascending timestamp.
-    Collections.sort(bodyMeasures,
-        (BodyMeasure lhs, BodyMeasure rhs) -> Long.compare(lhs.timestamp, rhs.timestamp));
+    Collections.sort(bodyMeasures, (lhs, rhs) -> Long.compare(lhs.timestamp, rhs.timestamp));
 
     return bodyMeasures.toArray(new BodyMeasure[bodyMeasures.size()]);
   }
