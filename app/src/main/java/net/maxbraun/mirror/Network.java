@@ -6,7 +6,7 @@ import android.content.SharedPreferences;
 import android.util.Log;
 
 import com.github.scribejava.core.builder.ServiceBuilder;
-import com.github.scribejava.core.builder.api.BaseApi;
+import com.github.scribejava.core.builder.api.DefaultApi20;
 import com.github.scribejava.core.model.OAuth2AccessToken;
 import com.github.scribejava.core.model.OAuthRequest;
 import com.github.scribejava.core.model.Response;
@@ -166,7 +166,7 @@ public abstract class Network {
   /**
    * Like {@link #get(String)}, but for OAuth authenticated requests.
    */
-  public static String get(Activity activity, String urlString, BaseApi<OAuth20Service> api,
+  public static String get(Activity activity, String urlString, DefaultApi20 api,
                            OAuthDataProvider data) {
     if (urlString == null) {
       return null;
@@ -230,8 +230,8 @@ public abstract class Network {
   /**
    * Like {@link #getJson(String)}, but for OAuth authenticated requests.
    */
-  public static JSONObject getJson(Activity activity, String requestUrl,
-                                   BaseApi<OAuth20Service> api, OAuthDataProvider data)
+  public static JSONObject getJson(Activity activity, String requestUrl, DefaultApi20 api,
+                                   OAuthDataProvider data)
       throws JSONException {
     String response = get(activity, requestUrl, api, data);
     if (response != null) {

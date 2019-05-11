@@ -153,7 +153,7 @@ public class Body extends DataUpdater<BodyMeasure[]> {
    * Creates the URL for a Nokia Health API request based on the current time.
    */
   private String getRequestUrl() {
-    return String.format(Locale.US, "https://api.health.nokia.com/measure" +
+    return String.format(Locale.US, "https://wbsapi.withings.net/measure" +
         "?action=getmeas" +
         "&startdate=%d",
         getStartTimestamp());

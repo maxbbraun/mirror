@@ -23,8 +23,8 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation 'com.github.scribejava:scribejava-apis:6.2.0'
-    implementation 'com.google.firebase:firebase-database:16.0.5'
+    implementation 'com.github.scribejava:scribejava-apis:6.5.1'
+    implementation 'com.google.firebase:firebase-database:16.1.0'
 }
 
 apply plugin: 'com.google.gms.google-services'

@@ -23,17 +23,17 @@ public class NokiaHealthApi extends DefaultApi20 {
 
   @Override
   public String getAccessTokenEndpoint() {
-    return "https://account.health.nokia.com/oauth2/token?grant_type=authorization_code";
+    return "https://account.withings.com/oauth2/token?grant_type=authorization_code";
   }
 
   @Override
   public String getRefreshTokenEndpoint() {
-    return "https://account.health.nokia.com/oauth2/token?grant_type=refresh_token";
+    return "https://account.withings.com/oauth2/token?grant_type=refresh_token";
   }
 
   @Override
   protected String getAuthorizationBaseUrl() {
-    return "https://account.health.nokia.com/oauth2_user/authorize2";
+    return "https://account.withings.com/oauth2_user/authorize2";
   }
 
   @Override
