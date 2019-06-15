@@ -79,7 +79,10 @@
   <net.maxbraun.mirror.BodyView
       xmlns:body="http://schemas.android.com/apk/res/net.maxbraun.mirror"
       android:id="@+id/body"
-      body:lineWidth="@dimen/body_line_width"
+      body:smoothLineWidth="@dimen/body_smooth_line_width"
+      body:smoothLineColor="@color/white"
+      body:rawLineWidth="@dimen/body_raw_line_width"
+      body:rawLineColor="@color/gray"
       body:labelMargin="@dimen/body_label_margin"
       body:dotRadius="@dimen/body_dot_radius"
       android:layout_width="220dp"

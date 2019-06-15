@@ -3,7 +3,10 @@
 <resources>
   <declare-styleable name="BodyView">
     <attr name="textSize" format="dimension"/>
-    <attr name="lineWidth" format="dimension"/>
+    <attr name="smoothLineWidth" format="dimension"/>
+    <attr name="smoothLineColor" format="color"/>
+    <attr name="rawLineWidth" format="dimension"/>
+    <attr name="rawLineColor" format="color"/>
     <attr name="labelMargin" format="dimension"/>
     <attr name="dotRadius" format="dimension"/>
   </declare-styleable>

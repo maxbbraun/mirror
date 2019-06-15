@@ -14,6 +14,9 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
 
+import com.google.common.collect.EvictingQueue;
+import com.google.common.math.Stats;
+
 import net.maxbraun.mirror.Body.BodyMeasure;
 
 import java.text.SimpleDateFormat;
@@ -44,6 +47,11 @@ public class BodyView extends View {
   private static final SimpleDateFormat DATE_FORMAT_24H = new SimpleDateFormat("d MMMM");
 
   /**
+   * The size of the running average smoothing window as a fraction of the view width.
+   */
+  private final float SMOOTH_WINDOW_SIZE = 0.05f;
+
+  /**
    * The {@link Paint} used to draw white dots.
    */
   private final Paint whiteDotPaint;
@@ -59,9 +67,14 @@ public class BodyView extends View {
   private final Paint greenDotPaint;
 
   /**
-   * The {@link Paint} used to draw the line.
+   * The {@link Paint} used to draw the smooth line.
    */
-  private final Paint linePaint;
+  private final Paint smoothLinePaint;
+
+  /**
+   * The {@link Paint} used to draw the raw data line.
+   */
+  private final Paint rawLinePaint;
 
   /**
    * The {@link Paint} used to draw the labels.
@@ -69,9 +82,14 @@ public class BodyView extends View {
   private final Paint labelPaint;
 
   /**
-   * The {@link Path} used to daw the line, which we reuse across {@link #onDraw(Canvas)} calls.
+   * The {@link Path} used to daw the smooth line, reused across {@link #onDraw(Canvas)} calls.
    */
-  private final Path linePath = new Path();
+  private final Path smoothLinePath = new Path();
+
+  /**
+   * The {@link Path} used to daw the raw line, reused across {@link #onDraw(Canvas)} calls.
+   */
+  private final Path rawLinePath = new Path();
 
   private final float dotRadiusPixels;
   private final float labelMarginPixels;
@@ -122,13 +140,22 @@ public class BodyView extends View {
     // Read the custom attributes from the layout.
     final TypedArray attributes = context.getTheme().obtainStyledAttributes(attrs,
         R.styleable.BodyView, defStyleAttr, defStyleRes);
-    float lineWidthValue;
+    float smoothLineWidthValue;
+    int smoothLineColor;
+    float rawLineWidthValue;
+    int rawLineColor;
     float textSizeValue;
     try {
       dotRadiusPixels = attributes.getDimension(R.styleable.BodyView_dotRadius,
           resources.getDimension(R.dimen.body_dot_radius));
-      lineWidthValue = attributes.getDimension(R.styleable.BodyView_lineWidth,
-          resources.getDimension(R.dimen.body_line_width));
+      smoothLineWidthValue = attributes.getDimension(R.styleable.BodyView_smoothLineWidth,
+          resources.getDimension(R.dimen.body_smooth_line_width));
+      smoothLineColor = attributes.getColor(R.styleable.BodyView_smoothLineColor,
+              resources.getColor(R.color.white));
+      rawLineWidthValue = attributes.getDimension(R.styleable.BodyView_rawLineWidth,
+              resources.getDimension(R.dimen.body_raw_line_width));
+      rawLineColor = attributes.getColor(R.styleable.BodyView_rawLineColor,
+              resources.getColor(R.color.gray));
       textSizeValue = attributes.getDimension(R.styleable.BodyView_textSize,
           resources.getDimension(R.dimen.small_text_size));
       labelMarginPixels = attributes.getDimension(R.styleable.BodyView_labelMargin,
@@ -138,7 +165,7 @@ public class BodyView extends View {
     }
 
     whiteDotPaint = new Paint() {{
-      setColor(Color.WHITE);
+      setColor(smoothLineColor);
       setAntiAlias(true);
       setStyle(Style.FILL);
     }};
@@ -155,12 +182,20 @@ public class BodyView extends View {
       setStyle(Style.FILL);
     }};
 
-    final float lineWidthPixels = lineWidthValue;
-    linePaint = new Paint() {{
-      setColor(Color.WHITE);
+    smoothLinePaint = new Paint() {{
+      setColor(smoothLineColor);
       setAntiAlias(true);
       setStyle(Style.STROKE);
-      setStrokeWidth(lineWidthPixels);
+      setStrokeWidth(smoothLineWidthValue);
+      setStrokeCap(Cap.ROUND);
+      setStrokeJoin(Join.ROUND);
+    }};
+
+    rawLinePaint = new Paint() {{
+      setColor(rawLineColor);
+      setAntiAlias(true);
+      setStyle(Style.STROKE);
+      setStrokeWidth(rawLineWidthValue);
       setStrokeCap(Cap.ROUND);
       setStrokeJoin(Join.ROUND);
     }};
@@ -254,7 +289,7 @@ public class BodyView extends View {
     float rightMargin = dotRadiusPixels + maxTimestampWeightLabelWidth + labelMarginPixels;
     float bottomMargin = dotRadiusPixels + labelHeight + labelMarginPixels;
 
-    // Iterate over all measures to calculate the chart data.
+    // Iterate over all measures to calculate the chart data, starting with the most recent.
     float maxWeightDotX = 0;
     float maxWeightDotY = 0;
     String maxWeightLabel = null;
@@ -267,8 +302,10 @@ public class BodyView extends View {
     float minWeightLabelY = 0;
     float maxTimestampX = 0;
     float maxTimestampY = 0;
-    linePath.rewind();
-    for (int i = 0; i < bodyMeasures.length; i++) {
+    smoothLinePath.rewind();
+    rawLinePath.rewind();
+    EvictingQueue window = EvictingQueue.create((int) (SMOOTH_WINDOW_SIZE * getWidth()));
+    for (int i = bodyMeasures.length - 1; i >= 0; i--) {
       BodyMeasure bodyMeasure = bodyMeasures[i];
       long timestamp = bodyMeasure.timestamp;
       double weight = bodyMeasure.weight;
@@ -305,16 +342,26 @@ public class BodyView extends View {
         maxTimestampY = y;
       }
 
-      // Append to the line.
-      if (linePath.isEmpty()) {
-        linePath.moveTo(x, y);
+      // Add the current value to a sliding window and calculate the mean. The window will grow from
+      // the right, so that the dot for the weight at the maximum timestamp is exactly at the mean
+      // of a window of size 1.
+      window.add(y);
+      Stats stats = Stats.of(window);
+      float mean = (float) stats.mean();
+
+      // Append the points to the lines.
+      if (smoothLinePath.isEmpty()) {
+        smoothLinePath.moveTo(x, mean);
+        rawLinePath.moveTo(x, y);
       } else {
-        linePath.lineTo(x, y);
+        smoothLinePath.lineTo(x, mean);
+        rawLinePath.lineTo(x, y);
       }
     }
 
-    // Draw the line.
-    canvas.drawPath(linePath, linePaint);
+    // Draw the lines.
+    canvas.drawPath(smoothLinePath, smoothLinePaint);
+    canvas.drawPath(rawLinePath, rawLinePaint);
 
     // Draw dots and labels for the maximum and minimum weights.
     if (maxWeightLabel != null) {
