@@ -217,41 +217,55 @@ public class BodyView extends View {
     Log.d(TAG, String.format("Showing %d body measures.",
         (bodyMeasures != null) ? bodyMeasures.length : 0));
 
-    // Calculate the minimum and maximum timestamps and weights.
-    if ((bodyMeasures != null) && (bodyMeasures.length > 0)) {
-      BodyMeasure firstBodyMeasure = bodyMeasures[0];
-      minTimestamp = firstBodyMeasure.timestamp;
-      maxTimestamp = minTimestamp;
-      minWeight = firstBodyMeasure.weight;
-      maxWeight = minWeight;
-      maxTimestampWeight = minWeight;
-
-      for (int i = 1; i < bodyMeasures.length; i++) {
-        BodyMeasure bodyMeasure = bodyMeasures[i];
-        long timestamp = bodyMeasure.timestamp;
-        double weight = bodyMeasure.weight;
-
-        if (timestamp < minTimestamp) {
-          minTimestamp = timestamp;
-        }
-        if (timestamp > maxTimestamp) {
-          maxTimestamp = timestamp;
-          maxTimestampWeight = weight;
-        }
-
-        if (weight < minWeight) {
-          minWeight = weight;
-        }
-        if (weight > maxWeight) {
-          maxWeight = weight;
-        }
-      }
-    } else {
+    // Default to empty values.
+    if ((bodyMeasures == null) || (bodyMeasures.length == 0)) {
       minTimestamp = 0;
       maxTimestamp = 0;
       minWeight = 0.0;
       maxWeight = 0.0;
       maxTimestampWeight = 0.0;
+      return;
+    }
+
+    // Find the first and last times.
+    minTimestamp = Long.MAX_VALUE;
+    maxTimestamp = Long.MIN_VALUE;
+    for (int i = 0; i < bodyMeasures.length; i++) {
+      BodyMeasure bodyMeasure = bodyMeasures[i];
+      long timestamp = bodyMeasure.timestamp;
+
+      if (timestamp < minTimestamp) {
+        minTimestamp = timestamp;
+      }
+
+      if (timestamp > maxTimestamp) {
+        maxTimestamp = timestamp;
+      }
+    }
+
+    // Adjust the starting time by skipping the part where the smoothing window is not full yet.
+    minTimestamp += (maxTimestamp - minTimestamp) * SMOOTH_WINDOW_SIZE;
+
+    // Save the lowest, highest, and most recent weights.
+    minWeight = Double.MAX_VALUE;
+    maxWeight = Double.MIN_VALUE;
+    maxTimestampWeight = minWeight;
+    for (int i = 1; i < bodyMeasures.length; i++) {
+      BodyMeasure bodyMeasure = bodyMeasures[i];
+      long timestamp = bodyMeasure.timestamp;
+      double weight = bodyMeasure.weight;
+
+      if (timestamp == maxTimestamp) {
+        maxTimestampWeight = weight;
+      }
+
+      if (weight < minWeight) {
+        minWeight = weight;
+      }
+
+      if (weight > maxWeight) {
+        maxWeight = weight;
+      }
     }
 
     // Trigger a redraw.
@@ -305,23 +319,29 @@ public class BodyView extends View {
     smoothLinePath.rewind();
     rawLinePath.rewind();
     EvictingQueue window = EvictingQueue.create((int) (SMOOTH_WINDOW_SIZE * getWidth()));
-    for (int i = bodyMeasures.length - 1; i >= 0; i--) {
+    for (int i = 0; i < bodyMeasures.length; i++) {
       BodyMeasure bodyMeasure = bodyMeasures[i];
       long timestamp = bodyMeasure.timestamp;
       double weight = bodyMeasure.weight;
 
       // Project the data point onto the available canvas.
       float x = project(timestamp, minTimestamp, maxTimestamp, leftMargin,
-          canvas.getWidth() - rightMargin);
+              getWidth() - rightMargin);
       float y = project((float) weight, (float) minWeight, (float) maxWeight,
-          canvas.getHeight() - bottomMargin, topMargin);
+              getHeight() - bottomMargin, topMargin);
+
+      // Add the latest value to the smoothing window and discard data until the window is full.
+      window.add(y);
+      if (window.remainingCapacity() > 0) {
+        continue;
+      }
 
       // Create a label with the weight and date, positioned as close to the data point as possible.
       String weightLabel = String.format(Locale.US, "%.0f %s · %s", getLocalizedWeight(weight),
-          getLocalizedWeightUnit(), getLocalizedDate(timestamp));
+              getLocalizedWeightUnit(), getLocalizedDate(timestamp));
       float weightLabelWidth = labelPaint.measureText(weightLabel);
       float weightLabelX = Math.min(Math.max(x - 0.5f * weightLabelWidth, 0.0f),
-          canvas.getWidth() - weightLabelWidth);
+              getWidth() - weightLabelWidth);
 
       // Save the dot coordinates and the label for the maximum and minimum weights, but only once.
       // The weight with the maximum timestamp also gets a dot.
@@ -335,17 +355,14 @@ public class BodyView extends View {
         minWeightDotX = x;
         minWeightDotY = y;
         minWeightLabelX = weightLabelX;
-        minWeightLabelY = canvas.getHeight() - fontMetrics.descent;
+        minWeightLabelY = getHeight() - fontMetrics.descent;
         minWeightLabel = weightLabel;
       } else if (timestamp == maxTimestamp) {
         maxTimestampX = x;
         maxTimestampY = y;
       }
 
-      // Add the current value to a sliding window and calculate the mean. The window will grow from
-      // the right, so that the dot for the weight at the maximum timestamp is exactly at the mean
-      // of a window of size 1.
-      window.add(y);
+      // Add the current value to a sliding window and calculate the mean.
       Stats stats = Stats.of(window);
       float mean = (float) stats.mean();
 
@@ -377,12 +394,12 @@ public class BodyView extends View {
     // minimum or maximum weight and shouldn't get a label.
     if (maxTimestampWeightLabel != null) {
       canvas.drawCircle(maxTimestampX, maxTimestampY, dotRadiusPixels, whiteDotPaint);
-      float maxTimestampWeightLabelX = canvas.getWidth() - maxTimestampWeightLabelWidth;
+      float maxTimestampWeightLabelX = getWidth() - maxTimestampWeightLabelWidth;
       float maxTimestampWeightLabelY = project((float) maxTimestampWeight, (float) minWeight,
-          (float) maxWeight, canvas.getHeight() - bottomMargin, topMargin)
-          + 0.5f * labelHeight - fontMetrics.descent;
+              (float) maxWeight, getHeight() - bottomMargin, topMargin)
+              + 0.5f * labelHeight - fontMetrics.descent;
       canvas.drawText(maxTimestampWeightLabel, maxTimestampWeightLabelX, maxTimestampWeightLabelY,
-          labelPaint);
+              labelPaint);
     }
   }
 
