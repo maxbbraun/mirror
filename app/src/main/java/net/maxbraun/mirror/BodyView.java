@@ -255,6 +255,10 @@ public class BodyView extends View {
       long timestamp = bodyMeasure.timestamp;
       double weight = bodyMeasure.weight;
 
+      if (timestamp < minTimestamp) {
+        continue;
+      }
+
       if (timestamp == maxTimestamp) {
         maxTimestampWeight = weight;
       }
