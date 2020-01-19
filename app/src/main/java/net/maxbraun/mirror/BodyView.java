@@ -336,7 +336,7 @@ public class BodyView extends View {
 
       // Add the latest value to the smoothing window and discard data until the window is full.
       window.add(y);
-      if (window.remainingCapacity() > 0) {
+      if (timestamp < minTimestamp) {
         continue;
       }
 
