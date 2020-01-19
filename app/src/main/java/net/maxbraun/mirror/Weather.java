@@ -4,6 +4,8 @@ import android.content.Context;
 import android.location.Location;
 import android.util.Log;
 
+import com.google.common.math.StatsAccumulator;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -25,6 +27,11 @@ public class Weather extends DataUpdater<WeatherData> {
    * The time in milliseconds between API calls to update the weather.
    */
   private static final long UPDATE_INTERVAL_MILLIS = TimeUnit.MINUTES.toMillis(5);
+
+  /**
+   * The time in seconds over which to average the precipitation probability.
+   */
+  private static final long PRECIPITATION_WINDOW_SECONDS = TimeUnit.HOURS.toSeconds(12);
 
   /**
    * The context used to load string resources.
@@ -184,16 +191,21 @@ public class Weather extends DataUpdater<WeatherData> {
    * https://darksky.net/dev/docs
    */
   private Double parseDayPrecipitationProbability(JSONObject response) throws JSONException {
+    long currentTime = response.getJSONObject("currently").getLong("time");
     JSONObject hourly = response.getJSONObject("hourly");
     JSONArray data = hourly.getJSONArray("data");
 
-    // Calculate the average over the whole day.
-    double sum = 0;
+    // Calculate the average over the coming hours.
+    StatsAccumulator stats = new StatsAccumulator();
     for (int i = 0; i < data.length(); i++) {
-      double probability = data.getJSONObject(i).getDouble("precipProbability");
-      sum += probability;
+      JSONObject object = data.getJSONObject(i);
+      long time = object.getLong("time");
+      if (time >= currentTime && time <= currentTime + PRECIPITATION_WINDOW_SECONDS) {
+        double probability = object.getDouble("precipProbability");
+        stats.add(probability);
+      }
     }
-    return sum / data.length();
+    return stats.mean();
   }
 
   /**
