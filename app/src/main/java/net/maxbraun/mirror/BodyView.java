@@ -72,9 +72,9 @@ public class BodyView extends View {
   private final Paint smoothLinePaint;
 
   /**
-   * The {@link Paint} used to draw the raw data line.
+   * The {@link Paint} used to draw the raw data dots.
    */
-  private final Paint rawLinePaint;
+  private final Paint rawDotPaint;
 
   /**
    * The {@link Paint} used to draw the labels.
@@ -87,11 +87,18 @@ public class BodyView extends View {
   private final Path smoothLinePath = new Path();
 
   /**
-   * The {@link Path} used to daw the raw line, reused across {@link #onDraw(Canvas)} calls.
+   * The radius of the raw dots in pixels.
    */
-  private final Path rawLinePath = new Path();
+  private final float rawDotRadiusPixels;
 
-  private final float dotRadiusPixels;
+  /**
+   * The radius of the red, green, and white highlight dots in pixels.
+   */
+  private final float highlightDotRadiusPixels;
+
+  /**
+   * The margin for the weight labels in pixels.
+   */
   private final float labelMarginPixels;
 
   private BodyMeasure[] bodyMeasures;
@@ -142,20 +149,19 @@ public class BodyView extends View {
         R.styleable.BodyView, defStyleAttr, defStyleRes);
     float smoothLineWidthValue;
     int smoothLineColor;
-    float rawLineWidthValue;
-    int rawLineColor;
+    int rawDotColor;
     float textSizeValue;
     try {
-      dotRadiusPixels = attributes.getDimension(R.styleable.BodyView_dotRadius,
-          resources.getDimension(R.dimen.body_dot_radius));
+      highlightDotRadiusPixels = attributes.getDimension(R.styleable.BodyView_highlightDotRadius,
+          resources.getDimension(R.dimen.body_highlight_dot_radius));
+      rawDotRadiusPixels = attributes.getDimension(R.styleable.BodyView_rawDotRadius,
+          resources.getDimension(R.dimen.body_raw_dot_radius));
       smoothLineWidthValue = attributes.getDimension(R.styleable.BodyView_smoothLineWidth,
           resources.getDimension(R.dimen.body_smooth_line_width));
       smoothLineColor = attributes.getColor(R.styleable.BodyView_smoothLineColor,
-              resources.getColor(R.color.white));
-      rawLineWidthValue = attributes.getDimension(R.styleable.BodyView_rawLineWidth,
-              resources.getDimension(R.dimen.body_raw_line_width));
-      rawLineColor = attributes.getColor(R.styleable.BodyView_rawLineColor,
-              resources.getColor(R.color.gray));
+          resources.getColor(R.color.white));
+      rawDotColor = attributes.getColor(R.styleable.BodyView_rawDotColor,
+          resources.getColor(R.color.gray));
       textSizeValue = attributes.getDimension(R.styleable.BodyView_textSize,
           resources.getDimension(R.dimen.small_text_size));
       labelMarginPixels = attributes.getDimension(R.styleable.BodyView_labelMargin,
@@ -191,13 +197,9 @@ public class BodyView extends View {
       setStrokeJoin(Join.ROUND);
     }};
 
-    rawLinePaint = new Paint() {{
-      setColor(rawLineColor);
+    rawDotPaint = new Paint() {{
+      setColor(rawDotColor);
       setAntiAlias(true);
-      setStyle(Style.STROKE);
-      setStrokeWidth(rawLineWidthValue);
-      setStrokeCap(Cap.ROUND);
-      setStrokeJoin(Join.ROUND);
     }};
 
     final float textSize = textSizeValue;
@@ -302,10 +304,10 @@ public class BodyView extends View {
     // Calculate the margins, which leave room for the dots, the labels, and additional margins.
     FontMetrics fontMetrics = labelPaint.getFontMetrics();
     float labelHeight = fontMetrics.descent - fontMetrics.ascent;
-    float leftMargin = dotRadiusPixels;
-    float topMargin = dotRadiusPixels + labelHeight + labelMarginPixels;
-    float rightMargin = dotRadiusPixels + maxTimestampWeightLabelWidth + labelMarginPixels;
-    float bottomMargin = dotRadiusPixels + labelHeight + labelMarginPixels;
+    float leftMargin = highlightDotRadiusPixels;
+    float topMargin = highlightDotRadiusPixels + labelHeight + labelMarginPixels;
+    float rightMargin = highlightDotRadiusPixels + maxTimestampWeightLabelWidth + labelMarginPixels;
+    float bottomMargin = highlightDotRadiusPixels + labelHeight + labelMarginPixels;
 
     // Iterate over all measures to calculate the chart data, starting with the most recent.
     float maxWeightDotX = 0;
@@ -321,7 +323,6 @@ public class BodyView extends View {
     float maxTimestampX = 0;
     float maxTimestampY = 0;
     smoothLinePath.rewind();
-    rawLinePath.rewind();
     EvictingQueue window = EvictingQueue.create((int) (SMOOTH_WINDOW_SIZE * getWidth()));
     for (int i = 0; i < bodyMeasures.length; i++) {
       BodyMeasure bodyMeasure = bodyMeasures[i];
@@ -330,9 +331,9 @@ public class BodyView extends View {
 
       // Project the data point onto the available canvas.
       float x = project(timestamp, minTimestamp, maxTimestamp, leftMargin,
-              getWidth() - rightMargin);
+          getWidth() - rightMargin);
       float y = project((float) weight, (float) minWeight, (float) maxWeight,
-              getHeight() - bottomMargin, topMargin);
+          getHeight() - bottomMargin, topMargin);
 
       // Add the latest value to the smoothing window and discard data until the window is full.
       window.add(y);
@@ -342,10 +343,10 @@ public class BodyView extends View {
 
       // Create a label with the weight and date, positioned as close to the data point as possible.
       String weightLabel = String.format(Locale.US, "%.0f %s · %s", getLocalizedWeight(weight),
-              getLocalizedWeightUnit(), getLocalizedDate(timestamp));
+          getLocalizedWeightUnit(), getLocalizedDate(timestamp));
       float weightLabelWidth = labelPaint.measureText(weightLabel);
       float weightLabelX = Math.min(Math.max(x - 0.5f * weightLabelWidth, 0.0f),
-              getWidth() - weightLabelWidth);
+          getWidth() - weightLabelWidth);
 
       // Save the dot coordinates and the label for the maximum and minimum weights, but only once.
       // The weight with the maximum timestamp also gets a dot.
@@ -370,40 +371,40 @@ public class BodyView extends View {
       Stats stats = Stats.of(window);
       float mean = (float) stats.mean();
 
-      // Append the points to the lines.
+      // Append the point to the smooth line.
       if (smoothLinePath.isEmpty()) {
         smoothLinePath.moveTo(x, mean);
-        rawLinePath.moveTo(x, y);
       } else {
         smoothLinePath.lineTo(x, mean);
-        rawLinePath.lineTo(x, y);
       }
+
+      // Draw the raw dot.
+      canvas.drawCircle(x, y, rawDotRadiusPixels, rawDotPaint);
     }
 
-    // Draw the lines.
+    // Draw the smooth line.
     canvas.drawPath(smoothLinePath, smoothLinePaint);
-    canvas.drawPath(rawLinePath, rawLinePaint);
 
     // Draw dots and labels for the maximum and minimum weights.
     if (maxWeightLabel != null) {
-      canvas.drawCircle(maxWeightDotX, maxWeightDotY, dotRadiusPixels, redDotPaint);
+      canvas.drawCircle(maxWeightDotX, maxWeightDotY, highlightDotRadiusPixels, redDotPaint);
       canvas.drawText(maxWeightLabel, maxWeightLabelX, maxWeightLabelY, labelPaint);
     }
     if (minWeightLabel != null) {
-      canvas.drawCircle(minWeightDotX, minWeightDotY, dotRadiusPixels, greenDotPaint);
+      canvas.drawCircle(minWeightDotX, minWeightDotY, highlightDotRadiusPixels, greenDotPaint);
       canvas.drawText(minWeightLabel, minWeightLabelX, minWeightLabelY, labelPaint);
     }
 
     // Draw a dot and a label for the weight at the maximum timestamp, unless it is identical to the
     // minimum or maximum weight and shouldn't get a label.
     if (maxTimestampWeightLabel != null) {
-      canvas.drawCircle(maxTimestampX, maxTimestampY, dotRadiusPixels, whiteDotPaint);
+      canvas.drawCircle(maxTimestampX, maxTimestampY, highlightDotRadiusPixels, whiteDotPaint);
       float maxTimestampWeightLabelX = getWidth() - maxTimestampWeightLabelWidth;
       float maxTimestampWeightLabelY = project((float) maxTimestampWeight, (float) minWeight,
-              (float) maxWeight, getHeight() - bottomMargin, topMargin)
-              + 0.5f * labelHeight - fontMetrics.descent;
+          (float) maxWeight, getHeight() - bottomMargin, topMargin)
+          + 0.5f * labelHeight - fontMetrics.descent;
       canvas.drawText(maxTimestampWeightLabel, maxTimestampWeightLabelX, maxTimestampWeightLabelY,
-              labelPaint);
+          labelPaint);
     }
   }
 
@@ -411,7 +412,7 @@ public class BodyView extends View {
    * Projects a value linearly from one range to another.
    */
   private static float project(float value, float minFrom, float maxFrom, float minTo,
-      float maxTo) {
+                               float maxTo) {
     return (value - minFrom) / (maxFrom - minFrom) * (maxTo - minTo) + minTo;
   }
 
