@@ -22,12 +22,13 @@ public class News extends DataUpdater<List<String>> {
   /**
    * The URL of the "Top News" RSS feed from Reuters.
    */
-  private static final String NEWS_RSS_URL = "http://feeds.reuters.com/reuters/topNews";
+  private static final String NEWS_RSS_URL =
+      "https://content.api.nytimes.com/svc/news/v3/all/recent.rss";
 
   /**
    * The time in milliseconds between API calls to update the news.
    */
-  private static final long UPDATE_INTERVAL_MILLIS = TimeUnit.MINUTES.toMillis(15);
+  private static final long UPDATE_INTERVAL_MILLIS = TimeUnit.MINUTES.toMillis(5);
 
   /**
    * A parser for the news feed XML.
