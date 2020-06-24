@@ -20,10 +20,9 @@ public class News extends DataUpdater<List<String>> {
   private static final String TAG = News.class.getSimpleName();
 
   /**
-   * The URL of the "Top News" RSS feed from Reuters.
+   * The URL of the "World" RSS news feed from the BBC.
    */
-  private static final String NEWS_RSS_URL =
-      "https://content.api.nytimes.com/svc/news/v3/all/recent.rss";
+  private static final String NEWS_RSS_URL = "http://feeds.bbci.co.uk/news/world/rss.xml";
 
   /**
    * The time in milliseconds between API calls to update the news.
