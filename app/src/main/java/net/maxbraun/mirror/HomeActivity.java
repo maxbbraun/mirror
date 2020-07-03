@@ -47,12 +47,12 @@ public class HomeActivity extends Activity {
         temperatureView.setText(temperature);
 
         // Populate the 24-hour forecast summary, but strip any period at the end.
-        String summary = util.stripPeriod(data.daySummary);
+        String summary = util.stripPeriod(data.forecastSummary);
         weatherSummaryView.setText(summary);
 
         // Populate the precipitation probability as a percentage rounded to a whole number.
         String precipitation =
-            String.format(Locale.US, "%d%%", Math.round(100 * data.dayPrecipitationProbability));
+            String.format(Locale.US, "%d%%", Math.round(100 * data.precipitationProbability));
         precipitationView.setText(precipitation);
 
         // Populate the icon for the current weather.

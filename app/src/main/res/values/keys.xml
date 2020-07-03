@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <resources>
-  <!-- Get the Dark Sky API key from: https://darksky.net/dev -->
-  <string name="dark_sky_api_key">DARK_SKY_API_KEY</string>
+  <!-- Get the AccuWeather API key from: https://developer.accuweather.com -->
+  <string name="accu_weather_api_key">ACCU_WEATHER_API_KEY</string>
 
   <!-- Get the Nokia Health API keys from: http://developer.health.nokia.com/oauth2/ -->
   <!-- Consider using: https://colab.research.google.com/drive/1bkU7T5uv368nTQLN66TosILYCmIq0L6F -->
