@@ -126,7 +126,7 @@ public class Weather extends DataUpdater<WeatherData> {
 
     // Parse the data we are interested in from the response JSON.
     try {
-      JSONObject response = Network.getJson(requestUrl);
+      JSONObject response = Network.getJsonObject(requestUrl);
       if (response != null) {
         return new WeatherData(
             parseCurrentTemperature(response),

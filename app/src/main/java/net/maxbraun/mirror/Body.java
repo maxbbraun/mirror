@@ -90,7 +90,7 @@ public class Body extends DataUpdater<BodyMeasure[]> {
 
     // Parse the data we are interested in from the response JSON.
     try {
-      JSONObject response = Network.getJson(activity, requestUrl, NokiaHealthApi.instance(),
+      JSONObject response = Network.getJsonObject(activity, requestUrl, NokiaHealthApi.instance(),
           nokiaHealthApiData);
       if (response != null) {
         return parseBodyMeasures(response);

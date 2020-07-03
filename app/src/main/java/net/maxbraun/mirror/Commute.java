@@ -178,8 +178,8 @@ public class Commute extends DataUpdater<CommuteSummary> {
 
     // Parse the data we are interested in from the response JSON.
     try {
-      JSONObject nowResponse = Network.getJson(nowRequestUrl);
-      JSONObject futureResponse = Network.getJson(futureRequestUrl);
+      JSONObject nowResponse = Network.getJsonObject(nowRequestUrl);
+      JSONObject futureResponse = Network.getJsonObject(futureRequestUrl);
       if ((nowResponse != null) && (futureResponse != null)) {
         return parseCommuteSummary(nowResponse, futureResponse);
       } else {

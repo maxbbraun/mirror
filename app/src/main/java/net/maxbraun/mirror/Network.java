@@ -13,6 +13,7 @@ import com.github.scribejava.core.model.Response;
 import com.github.scribejava.core.model.Verb;
 import com.github.scribejava.core.oauth.OAuth20Service;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -215,31 +216,57 @@ public abstract class Network {
   }
 
   /**
-   * Makes a network request at the specified URL, expecting a JSON response.
+   * Makes a network request at the specified URL, expecting a JSON object response.
    */
-  public static JSONObject getJson(String requestUrl) throws JSONException {
+  public static JSONObject getJsonObject(String requestUrl) throws JSONException {
     String response = get(requestUrl);
-    if (response != null) {
-      return new JSONObject(response);
-    } else {
-      Log.w(TAG, "Empty response.");
+    if (response == null) {
+      Log.w(TAG, "No JSON object in response.");
       return null;
     }
+
+    return new JSONObject(response);
   }
 
   /**
-   * Like {@link #getJson(String)}, but for OAuth authenticated requests.
+   * Makes a network request at the specified URL, expecting a JSON array response.
    */
-  public static JSONObject getJson(Activity activity, String requestUrl, DefaultApi20 api,
-                                   OAuthDataProvider data)
-      throws JSONException {
-    String response = get(activity, requestUrl, api, data);
-    if (response != null) {
-      return new JSONObject(response);
-    } else {
-      Log.w(TAG, "Empty OAuth response.");
+  public static JSONArray getJsonArray(String requestUrl) throws JSONException {
+    String response = get(requestUrl);
+    if (response == null) {
+      Log.w(TAG, "No JSON array in response.");
       return null;
     }
+
+    return new JSONArray(response);
+  }
+
+  /**
+   * Like {@link #getJsonObject(String)}, but for OAuth authenticated requests.
+   */
+  public static JSONObject getJsonObject(Activity activity, String requestUrl, DefaultApi20 api,
+      OAuthDataProvider data) throws JSONException {
+    String response = get(activity, requestUrl, api, data);
+    if (response == null) {
+      Log.w(TAG, "No JSON object in OAuth response.");
+      return null;
+    }
+
+    return new JSONObject(response);
+  }
+
+  /**
+   * Like {@link #getJsonArray(String)}, but for OAuth authenticated requests.
+   */
+  public static JSONArray getJsonArray(Activity activity, String requestUrl, DefaultApi20 api,
+      OAuthDataProvider data) throws JSONException {
+    String response = get(activity, requestUrl, api, data);
+    if (response == null) {
+      Log.w(TAG, "No JSON array in OAuth response.");
+      return null;
+    }
+
+    return new JSONArray(response);
   }
 
   /**
