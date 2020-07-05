@@ -254,7 +254,8 @@ public class Weather extends DataUpdater<WeatherData> {
 
     return String.format(
         Locale.US,
-        "https://dataservice.accuweather.com/currentconditions/v1/%s?apikey=%s",
+        "%s/currentconditions/v1/%s?apikey=%s",
+        ACCU_WEATHER_BASE_URL,
         locationKey,
         context.getString(R.string.accu_weather_api_key));
   }
@@ -270,7 +271,8 @@ public class Weather extends DataUpdater<WeatherData> {
 
     return String.format(
         Locale.US,
-        "https://dataservice.accuweather.com/forecasts/v1/daily/1day/%s?apikey=%s&details=true",
+        "%s/forecasts/v1/daily/1day/%s?apikey=%s&details=true",
+        ACCU_WEATHER_BASE_URL,
         locationKey,
         context.getString(R.string.accu_weather_api_key));
   }
