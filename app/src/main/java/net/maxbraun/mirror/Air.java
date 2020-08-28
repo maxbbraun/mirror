@@ -95,21 +95,32 @@ public class Air extends DataUpdater<AirData> {
       }
 
       // Parse the data we are interested in from the response JSON.
-      JSONObject forecast = response.getJSONObject(0);
-      int aqi = forecast
-          .getInt("AQI");
-      String category = forecast
-          .getJSONObject("Category")
-          .getString("Name");
-      int categoryNumber = forecast
-          .getJSONObject("Category")
-          .getInt("Number");
+      for (int i = 0; i < response.length(); i++) {
+        JSONObject observation = response.getJSONObject(i);
 
-      return new AirData(
-          aqi,
-          category,
-          iconResources.get(categoryNumber)
-      );
+        // Skip everything but particulate matter observations.
+        if (!"PM2.5".equals(observation.getString("ParameterName"))) {
+          continue;
+        }
+
+        int aqi = observation
+            .getInt("AQI");
+        String category = observation
+            .getJSONObject("Category")
+            .getString("Name");
+        int categoryNumber = observation
+            .getJSONObject("Category")
+            .getInt("Number");
+
+        return new AirData(
+            aqi,
+            category,
+            iconResources.get(categoryNumber)
+        );
+      }
+
+      Log.e(TAG, "No particulate matter observation found: " + response);
+      return null;
     } catch (JSONException e) {
       Log.e(TAG, "Failed to parse air quality JSON.", e);
       return null;
@@ -127,7 +138,7 @@ public class Air extends DataUpdater<AirData> {
 
     return String.format(
         Locale.US,
-        "%s/aq/forecast/latLong/" +
+        "%s/aq/observation/latLong/current" +
             "?format=application/json" +
             "&latitude=%f" +
             "&longitude=%f" +
