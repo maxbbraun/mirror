@@ -10,6 +10,7 @@ import android.widget.TextView;
 import java.util.List;
 import java.util.Locale;
 
+import net.maxbraun.mirror.Air.AirData;
 import net.maxbraun.mirror.Body.BodyMeasure;
 import net.maxbraun.mirror.Commute.CommuteSummary;
 import net.maxbraun.mirror.DataUpdater.UpdateListener;
@@ -70,6 +71,24 @@ public class HomeActivity extends Activity {
         weatherSummaryView.setVisibility(View.GONE);
         precipitationView.setVisibility(View.GONE);
         iconView.setVisibility(View.GONE);
+      }
+    }
+  };
+
+  /**
+   * The listener used to populate the UI with air quality data.
+   */
+  private final UpdateListener<AirData> airQualityUpdateListener = new UpdateListener<AirData>() {
+    @Override
+    public void onUpdate(AirData airData) {
+      if (airData != null) {
+
+        // Populate the air quality index number and icon.
+        airQualityView.setText(Integer.toString(airData.aqi));
+        airQualityView.setCompoundDrawablesWithIntrinsicBounds(airData.icon, 0, 0, 0);
+        airQualityView.setVisibility(View.VISIBLE);
+      } else {
+        airQualityView.setVisibility(View.GONE);
       }
     }
   };
@@ -139,6 +158,7 @@ public class HomeActivity extends Activity {
   private TextView temperatureView;
   private TextView weatherSummaryView;
   private TextView precipitationView;
+  private TextView airQualityView;
   private ImageView iconView;
   private TextView[] newsViews = new TextView[NEWS_VIEW_IDS.length];
   private BodyView bodyView;
@@ -147,6 +167,7 @@ public class HomeActivity extends Activity {
   private ImageView trafficTrendView;
 
   private Weather weather;
+  private Air air;
   private News news;
   private Body body;
   private Commute commute;
@@ -160,6 +181,7 @@ public class HomeActivity extends Activity {
     temperatureView = (TextView) findViewById(R.id.temperature);
     weatherSummaryView = (TextView) findViewById(R.id.weather_summary);
     precipitationView = (TextView) findViewById(R.id.precipitation);
+    airQualityView = (TextView) findViewById(R.id.air_quality);
     iconView = (ImageView) findViewById(R.id.icon);
     for (int i = 0; i < NEWS_VIEW_IDS.length; i++) {
       newsViews[i] = (TextView) findViewById(NEWS_VIEW_IDS[i]);
@@ -170,6 +192,7 @@ public class HomeActivity extends Activity {
     trafficTrendView = (ImageView) findViewById(R.id.trafficTrend);
 
     weather = new Weather(this, weatherUpdateListener);
+    air = new Air(this, airQualityUpdateListener);
     news = new News(newsUpdateListener);
     body = new Body(this, bodyUpdateListener);
     commute = new Commute(this, commuteUpdateListener);
@@ -180,6 +203,7 @@ public class HomeActivity extends Activity {
   protected void onStart() {
     super.onStart();
     weather.start();
+    air.start();
     news.start();
     body.start();
     commute.start();
@@ -188,6 +212,7 @@ public class HomeActivity extends Activity {
   @Override
   protected void onStop() {
     weather.stop();
+    air.stop();
     news.stop();
     body.stop();
     commute.stop();

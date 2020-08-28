@@ -4,6 +4,9 @@
   <!-- Get the AccuWeather API key from: https://developer.accuweather.com -->
   <string name="accu_weather_api_key">ACCU_WEATHER_API_KEY</string>
 
+  <!-- Get the AirNow API key from: https://docs.airnowapi.org -->
+  <string name="air_now_api_key">AIR_NOW_API_KEY</string>
+
   <!-- Get the Nokia Health API keys from: http://developer.health.nokia.com/oauth2/ -->
   <!-- Consider using: https://colab.research.google.com/drive/1bkU7T5uv368nTQLN66TosILYCmIq0L6F -->
   <string name="nokia_health_client_id">NOKIA_HEALTH_CLIENT_ID</string>

@@ -16,10 +16,9 @@ uses [`CompactHomeActivity.java`](app/src/main/java/net/maxbraun/mirror/CompactH
 
 While the time, date, and news show up without any additional changes, you need to first enable the
 respective APIs in order to see the weather, commute, and body measures. Edit
-[`keys.xml`](app/src/main/res/values/keys.xml) and enter the key for the
-[AccuWeather API](https://developer.accuweather.com), the key for the
-[Google Maps Directions API](https://developers.google.com/maps/documentation/directions/start), and
-multiple keys for the [Nokia Health API](https://developer.health.nokia.com/oauth2/).
+[`keys.xml`](app/src/main/res/values/keys.xml) and enter the keys for the
+[AccuWeather API](https://developer.accuweather.com), the [AirNow API](https://docs.airnowapi.org), the
+[Google Maps Directions API](https://developers.google.com/maps/documentation/directions/start), and the [Nokia Health API](https://developer.health.nokia.com/oauth2/).
 
 The home and work addresses and the travel mode for the commute are pulled from a
 [Firebase Realtime Database](https://firebase.google.com/docs/database/) and can be edited in the

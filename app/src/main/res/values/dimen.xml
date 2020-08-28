@@ -8,7 +8,8 @@
   <dimen name="weather_icon_size_compact">192dp</dimen>
   <dimen name="traffic_icon_size">24dp</dimen>
   <dimen name="traffic_icon_size_compact">48dp</dimen>
-  <dimen name="precipitation_margin">15dp</dimen>
+  <dimen name="weather_summary_margin">15dp</dimen>
+  <dimen name="air_quality_margin">20dp</dimen>
   <dimen name="news_line_margin">10dp</dimen>
   <dimen name="small_text_size">20dp</dimen>
   <dimen name="small_text_size_compact">40dp</dimen>

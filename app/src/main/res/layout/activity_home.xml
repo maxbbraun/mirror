@@ -36,6 +36,7 @@
       android:layout_height="wrap_content"
       android:layout_alignParentLeft="true"
       android:layout_below="@id/temperature"
+      android:layout_marginBottom="@dimen/weather_summary_margin"
       android:gravity="left"
       android:maxWidth="380dp"
       tools:text="Mostly cloudy until tomorrow evening"/>
@@ -46,10 +47,20 @@
       android:layout_height="wrap_content"
       android:layout_alignParentLeft="true"
       android:layout_below="@id/weather_summary"
-      android:layout_marginTop="@dimen/precipitation_margin"
       android:drawableLeft="@drawable/umbrella"
       android:drawablePadding="@dimen/icon_margin"
       tools:text="6%"/>
+  <TextView
+      android:id="@+id/air_quality"
+      style="@style/WeatherTextStyle"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_below="@id/weather_summary"
+      android:layout_toRightOf="@id/precipitation"
+      android:layout_marginLeft="@dimen/air_quality_margin"
+      android:drawableLeft="@drawable/aqi_usg"
+      android:drawablePadding="@dimen/icon_margin"
+      tools:text="123"/>
 
   <!-- Time and date -->
   <TextClock
