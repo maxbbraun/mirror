@@ -187,9 +187,9 @@ public class HomeActivity extends Activity {
       newsViews[i] = (TextView) findViewById(NEWS_VIEW_IDS[i]);
     }
     bodyView = (BodyView) findViewById(R.id.body);
-    commuteTextView = (TextView) findViewById(R.id.commuteText);
-    travelModeView = (ImageView) findViewById(R.id.travelMode);
-    trafficTrendView = (ImageView) findViewById(R.id.trafficTrend);
+    commuteTextView = (TextView) findViewById(R.id.commute_text);
+    travelModeView = (ImageView) findViewById(R.id.travel_mode);
+    trafficTrendView = (ImageView) findViewById(R.id.traffic_trend);
 
     weather = new Weather(this, weatherUpdateListener);
     air = new Air(this, airQualityUpdateListener);

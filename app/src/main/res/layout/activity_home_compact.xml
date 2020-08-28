@@ -63,21 +63,21 @@
           android:layout_gravity="center_vertical"
           android:orientation="horizontal">
         <ImageView
-            android:id="@+id/travelMode"
+            android:id="@+id/travel_mode"
             android:layout_width="@dimen/traffic_icon_size_compact"
             android:layout_height="@dimen/traffic_icon_size_compact"
             android:layout_gravity="center_vertical"
             tools:src="@drawable/driving"
             android:layout_marginRight="@dimen/icon_margin_compact"/>
         <ImageView
-            android:id="@+id/trafficTrend"
+            android:id="@+id/traffic_trend"
             android:layout_width="@dimen/traffic_icon_size_compact"
             android:layout_height="@dimen/traffic_icon_size_compact"
             android:layout_gravity="center_vertical"
             tools:src="@drawable/trend_up"
             android:layout_marginRight="@dimen/icon_margin_compact"/>
         <TextView
-            android:id="@+id/commuteText"
+            android:id="@+id/commute_text"
             style="@style/CommuteTextStyleCompact"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

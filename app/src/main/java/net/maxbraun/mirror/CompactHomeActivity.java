@@ -194,9 +194,9 @@ public class CompactHomeActivity extends Activity {
 
     // Commute
     commuteView = findViewById(R.id.commute);
-    commuteTextView = findViewById(R.id.commuteText);
-    travelModeView = findViewById(R.id.travelMode);
-    trafficTrendView = findViewById(R.id.trafficTrend);
+    commuteTextView = findViewById(R.id.commute_text);
+    travelModeView = findViewById(R.id.travel_mode);
+    trafficTrendView = findViewById(R.id.traffic_trend);
 
     // Body
     bodyView = findViewById(R.id.body);
