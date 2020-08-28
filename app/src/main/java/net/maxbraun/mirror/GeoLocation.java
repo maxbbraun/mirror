@@ -18,10 +18,22 @@ public abstract class GeoLocation {
   private static final String GEO_IP_URL = "http://ip-api.com/json";
 
   /**
+   * The location cached at the last request. Assumed to be static.
+   */
+  private static Location cachedLocation;
+
+  /**
    * Makes a request to the geo location API and returns the current location or {@code null} on
-   * error.
+   * error. Uses an in memory cache after the first request.
    */
   public static Location getLocation() {
+    // Always use the cache, if possible.
+    if (cachedLocation != null) {
+      return cachedLocation;
+    }
+
+    // We're using geo location by IP, because many headless Android devices don't return anything
+    // useful through the usual location APIs.
     String response = Network.get(GEO_IP_URL);
     if (response == null) {
       Log.e(TAG, "Empty response.");
@@ -36,6 +48,11 @@ public abstract class GeoLocation {
       Location location = new Location("");
       location.setLatitude(latitude);
       location.setLongitude(longitude);
+      Log.d(TAG, "Using location: " + location);
+
+      // Populate the cache.
+      cachedLocation = location;
+
       return location;
     } catch (JSONException e) {
       Log.e(TAG, "Failed to parse geo location JSON.");

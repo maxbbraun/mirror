@@ -95,11 +95,6 @@ public class Weather extends DataUpdater<WeatherData> {
   }};
 
   /**
-   * The current location, which is assumed to be static.
-   */
-  private Location location;
-
-  /**
    * The data structure containing the weather information we are interested in.
    */
   public class WeatherData {
@@ -140,13 +135,7 @@ public class Weather extends DataUpdater<WeatherData> {
 
   @Override
   protected WeatherData getData() {
-    // Lazy load the location.
-    if (location == null) {
-      // We're using geo location by IP, because many headless Android devices don't return anything
-      // useful through the usual location APIs.
-      location = GeoLocation.getLocation();
-      Log.d(TAG, "Using location for weather: " + location);
-    }
+    Location location = GeoLocation.getLocation();
 
     // Convert the location to a location key required by the API requests.
     String locationKey = getLocationKey(location);
