@@ -7,28 +7,32 @@ import com.github.scribejava.core.oauth2.clientauthentication.ClientAuthenticati
 import com.github.scribejava.core.oauth2.clientauthentication.RequestBodyAuthenticationScheme;
 
 /**
- * An OAuth 2.0 API spec for the Nokia Health API.
+ * An OAuth 2.0 API spec for the Withings API.
  */
-public class NokiaHealthApi extends DefaultApi20 {
-  private NokiaHealthApi() {
+public class WithingsApi extends DefaultApi20 {
+  private WithingsApi() {
   }
 
   private static class InstanceHolder {
-    private static final NokiaHealthApi INSTANCE = new NokiaHealthApi();
+    private static final WithingsApi INSTANCE = new WithingsApi();
   }
 
-  public static NokiaHealthApi instance() {
+  public static WithingsApi instance() {
     return InstanceHolder.INSTANCE;
   }
 
   @Override
   public String getAccessTokenEndpoint() {
-    return "https://account.withings.com/oauth2/token?grant_type=authorization_code";
+    return "https://account.withings.com/oauth2/token" +
+        "?action=requesttoken" +
+        "&grant_type=authorization_code";
   }
 
   @Override
   public String getRefreshTokenEndpoint() {
-    return "https://account.withings.com/oauth2/token?grant_type=refresh_token";
+    return "https://account.withings.com/oauth2/token" +
+        "?action=requesttoken" +
+        "&grant_type=refresh_token";
   }
 
   @Override
