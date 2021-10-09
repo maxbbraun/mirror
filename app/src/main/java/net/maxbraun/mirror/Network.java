@@ -23,6 +23,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.CharBuffer;
+import java.nio.charset.StandardCharsets;
 import java.util.concurrent.ExecutionException;
 
 import javax.net.ssl.HttpsURLConnection;
@@ -32,6 +34,11 @@ import javax.net.ssl.HttpsURLConnection;
  */
 public abstract class Network {
   private static final String TAG = Network.class.getSimpleName();
+
+  /**
+   * The capacity in bytes of the buffer used to download data.
+   */
+  private static final int DOWNLOAD_BUFFER_BYTES = 1024;
 
   /**
    * The shared preferences key suffix for the access token.
@@ -140,11 +147,11 @@ public abstract class Network {
         connection = (HttpURLConnection) url.openConnection();
       }
       inputStream = connection.getInputStream();
-      BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+      InputStreamReader reader = new InputStreamReader(inputStream, StandardCharsets.UTF_8);
       StringBuilder result = new StringBuilder();
-      String line;
-      while ((line = reader.readLine()) != null) {
-        result.append(line);
+      char[] buffer = new char[DOWNLOAD_BUFFER_BYTES];
+      for (int numRead; (numRead = reader.read(buffer, 0, buffer.length)) > 0; ) {
+        result.append(buffer, 0, numRead);
       }
       return result.toString();
     } catch (IOException e) {
