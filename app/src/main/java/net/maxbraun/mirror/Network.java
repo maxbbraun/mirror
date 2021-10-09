@@ -17,13 +17,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.nio.CharBuffer;
 import java.nio.charset.StandardCharsets;
 import java.util.concurrent.ExecutionException;
 
@@ -38,7 +36,7 @@ public abstract class Network {
   /**
    * The capacity in bytes of the buffer used to download data.
    */
-  private static final int DOWNLOAD_BUFFER_BYTES = 1024;
+  private static final int DOWNLOAD_BUFFER_SIZE_BYTES = 1024;
 
   /**
    * The shared preferences key suffix for the access token.
@@ -149,7 +147,7 @@ public abstract class Network {
       inputStream = connection.getInputStream();
       InputStreamReader reader = new InputStreamReader(inputStream, StandardCharsets.UTF_8);
       StringBuilder result = new StringBuilder();
-      char[] buffer = new char[DOWNLOAD_BUFFER_BYTES];
+      char[] buffer = new char[DOWNLOAD_BUFFER_SIZE_BYTES];
       for (int numRead; (numRead = reader.read(buffer, 0, buffer.length)) > 0; ) {
         result.append(buffer, 0, numRead);
       }
