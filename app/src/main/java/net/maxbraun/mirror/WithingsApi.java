@@ -23,14 +23,14 @@ public class WithingsApi extends DefaultApi20 {
 
   @Override
   public String getAccessTokenEndpoint() {
-    return "https://account.withings.com/oauth2/token" +
+    return "https://wbsapi.withings.net/v2/oauth2" +
         "?action=requesttoken" +
         "&grant_type=authorization_code";
   }
 
   @Override
   public String getRefreshTokenEndpoint() {
-    return "https://account.withings.com/oauth2/token" +
+    return "https://wbsapi.withings.net/v2/oauth2" +
         "?action=requesttoken" +
         "&grant_type=refresh_token";
   }
