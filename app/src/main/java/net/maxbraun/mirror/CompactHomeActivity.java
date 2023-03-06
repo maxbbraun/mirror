@@ -1,8 +1,11 @@
 package net.maxbraun.mirror;
 
-import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.camera.core.ExperimentalGetImage;
+
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -24,7 +27,8 @@ import java.util.Locale;
 /**
  * A compact version of {@link HomeActivity}.
  */
-public class CompactHomeActivity extends Activity {
+@ExperimentalGetImage
+public class CompactHomeActivity extends AppCompatActivity implements Faces.FaceCallback {
   private static final String TAG = CompactHomeActivity.class.getSimpleName();
 
   /**
@@ -178,6 +182,7 @@ public class CompactHomeActivity extends Activity {
   private Body body;
   private Util util;
   private DatabaseReference uiSettings;
+  private Faces faces;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -203,6 +208,9 @@ public class CompactHomeActivity extends Activity {
 
     util = new Util(this);
     uiSettings = FirebaseDatabase.getInstance().getReference(UI_SETTINGS_PATH);
+
+    // Start detecting faces.
+    faces = new Faces(this, this, this);
   }
 
   @Override
@@ -313,5 +321,17 @@ public class CompactHomeActivity extends Activity {
       body = null;
     }
     bodyView.setVisibility(View.GONE);
+  }
+
+  @Override
+  public void onFaceEnter() {
+    // Turn on the light ring when a face is detected.
+    sendBroadcast(new Intent("net.maxbraun.lights.ALL_WHITE"));
+  }
+
+  @Override
+  public void onFaceExit() {
+    // Turn off the light ring when no face is detected.
+    sendBroadcast(new Intent("net.maxbraun.lights.ALL_OFF"));
   }
 }

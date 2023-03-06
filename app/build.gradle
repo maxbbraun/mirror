@@ -1,11 +1,11 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 26
+    compileSdkVersion 33
     defaultConfig {
         applicationId "net.maxbraun.mirror"
         minSdkVersion 22
-        targetSdkVersion 26
+        targetSdkVersion 33
         versionCode 1
         versionName "1.0"
     }
@@ -23,9 +23,22 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
+
     implementation 'com.github.scribejava:scribejava-apis:6.6.3'
-    implementation 'com.google.firebase:firebase-database:17.0.0'
-    api 'com.google.guava:guava:28.0-android'
+
+    implementation platform('com.google.firebase:firebase-bom:31.2.0')
+    implementation 'com.google.firebase:firebase-database'
+
+    api 'com.google.guava:guava:31.1-android'
+
+    implementation 'androidx.appcompat:appcompat:1.6.1';
+
+    def camerax_version = "1.2.1"
+    implementation "androidx.camera:camera-core:${camerax_version}"
+    implementation "androidx.camera:camera-camera2:${camerax_version}"
+    implementation "androidx.camera:camera-lifecycle:${camerax_version}"
+
+    implementation 'com.google.mlkit:face-detection:16.1.5'
 }
 
 apply plugin: 'com.google.gms.google-services'

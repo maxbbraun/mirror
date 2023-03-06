@@ -7,7 +7,9 @@
   <uses-feature
       android:name="android.hardware.touchscreen"
       android:required="false"/>
+  <uses-feature android:name="android.hardware.camera.any" />
 
+  <uses-permission android:name="android.permission.CAMERA" />
   <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
   <uses-permission android:name="android.permission.INTERNET"/>
   <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
@@ -21,6 +23,7 @@
 
     <activity
         android:name=".HomeActivity"
+        android:exported="true"
         android:clearTaskOnLaunch="true"
         android:icon="@drawable/home"
         android:label="@string/home_name"
@@ -38,6 +41,7 @@
 
     <activity
         android:name=".CompactHomeActivity"
+        android:exported="true"
         android:clearTaskOnLaunch="true"
         android:icon="@drawable/home"
         android:label="@string/home_name_compact"
@@ -53,7 +57,9 @@
       </intent-filter>
     </activity>
 
-    <receiver android:name=".BootReceiver">
+    <receiver
+        android:name=".BootReceiver"
+        android:exported="true">
       <intent-filter>
         <action android:name="android.intent.action.BOOT_COMPLETED"/>
       </intent-filter>
