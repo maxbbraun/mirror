@@ -20,14 +20,14 @@ public class News extends DataUpdater<List<String>> {
   private static final String TAG = News.class.getSimpleName();
 
   /**
-   * The URL of the "World" RSS news feed from the BBC.
+   * The URL of the Nice News RSS news feed.
    */
-  private static final String NEWS_RSS_URL = "http://feeds.bbci.co.uk/news/world/rss.xml";
+  private static final String NEWS_RSS_URL = "https://nicenews.com/feed/";
 
   /**
    * The time in milliseconds between API calls to update the news.
    */
-  private static final long UPDATE_INTERVAL_MILLIS = TimeUnit.MINUTES.toMillis(5);
+  private static final long UPDATE_INTERVAL_MILLIS = TimeUnit.HOURS.toMillis(1);
 
   /**
    * A parser for the news feed XML.
